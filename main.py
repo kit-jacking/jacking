@@ -3,5 +3,5 @@ def print_hi(name):
 
 
 if __name__ == '__main__':
-    print_hi('Jacing team')
+    print_hi('Jacing')
 
