@@ -7,25 +7,23 @@ C = Node("C", 0, 1)
 D = Node("D", 1, 1)
 E = Node("E", 2, 1)
 F = Node("F", 2, 0)
-A.add_neighbour(B, 1)
-A.add_neighbour(C, 2)
+
+A.add_neighbours([(B, 1), (C, 2)])
 print(A)
-B.add_neighbour(A, 1)
-B.add_neighbour(D, 2)
+
+B.add_neighbours([(A, 1), (D, 2)])
 print(B)
-C.add_neighbour(A, 2)
-C.add_neighbour(D, 2)
-C.add_neighbour(F, 6)
+
+C.add_neighbours([(A, 2), (D, 2), (F, 6)])
 print(C)
-D.add_neighbour(B, 2)
-D.add_neighbour(C, 2)
-D.add_neighbour(E, 2)
+
+D.add_neighbours([(B, 2), (C, 2), (E, 2)])
 print(D)
-E.add_neighbour(D, 2)
-E.add_neighbour(F, 2)
+
+E.add_neighbours([(D, 2), (F, 2)])
 print(E)
-F.add_neighbour(C, 6)
-F.add_neighbour(E, 2)
+
+F.add_neighbours([(C, 6), (E, 2)])
 print(F)
 
 if __name__ == '__main__':
@@ -40,5 +38,8 @@ if __name__ == '__main__':
 
     output = a_star(start_node, finish_node, distance)
 
+    print("Found path to:")
     print(output)
-    print(output.previous)
+    print("The path being:")
+    print(output.path())
+
