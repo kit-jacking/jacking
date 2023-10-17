@@ -1,4 +1,5 @@
 from classes.node import Node
+from classes.edge import Edge
 from algorithms.algorithms import *
 
 A = Node("A", 0, 0)
@@ -8,22 +9,22 @@ D = Node("D", 1, 1)
 E = Node("E", 2, 1)
 F = Node("F", 2, 0)
 
-A.add_neighbours([(B, 1), (C, 2)])
+A.add_neighbours([Edge(A, B, 1), Edge(A, C, 2)])
 print(A)
 
-B.add_neighbours([(A, 1), (D, 2)])
+B.add_neighbours([Edge(B, A, 1), Edge(B, D, 2)])
 print(B)
 
-C.add_neighbours([(A, 2), (D, 2), (F, 6)])
+C.add_neighbours([Edge(C, A, 2), Edge(C, D, 2), Edge(C, F, 6)])
 print(C)
 
-D.add_neighbours([(B, 2), (C, 2), (E, 2)])
+D.add_neighbours([Edge(D, B, 2), Edge(D, C, 2), Edge(D, E, 2)])
 print(D)
 
-E.add_neighbours([(D, 2), (F, 2)])
+E.add_neighbours([Edge(E, D, 2), Edge(E, F, 2)])
 print(E)
 
-F.add_neighbours([(C, 6), (E, 2)])
+F.add_neighbours([Edge(F, C, 6), Edge(F, E, 2)])
 print(F)
 
 if __name__ == '__main__':
@@ -42,4 +43,3 @@ if __name__ == '__main__':
     print(output)
     print("The path being:")
     print(output.path())
-

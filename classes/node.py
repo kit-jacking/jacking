@@ -1,31 +1,34 @@
 import math
+from classes.edge import Edge
 
 
 class Node:
-    def __init__(self, name: str, x: float, y: float, neighbours: "list[tuple[Node, float]]" = None,
+    def __init__(self, name: str, x: float, y: float, neighbours: list[Edge] = None,
                  g: float = math.inf, f: float = math.inf, previous: "Node" = None):
         self.name: str = name
-        self.x = x
-        self.y = y
+        self.x: float = x
+        self.y: float = y
 
         if neighbours:
-            self.neighbours: "list[tuple[Node, float]]" = neighbours
+            self.neighbours: list[Edge] = neighbours
         else:
-            self.neighbours: "list[tuple[Node, float]]" = []
+            self.neighbours: list[Edge] = []
 
-        self.g = g
-        self.f = f
+        self.g: float = g
+        self.f: float = f
         self.previous = previous
 
-    def add_neighbour(self, node: "Node", cost: float):
-        if node is not None and (node, cost) not in self.neighbours:
-            self.neighbours.append((node, cost))
+    def add_neighbour(self, edge: Edge):
+        if edge.start is not self:
+            raise RuntimeError("edge.start is not self!")
+        if edge not in self.neighbours:
+            self.neighbours.append(edge)
 
-    def add_neighbours(self, nodes_and_costs: list[tuple["Node", float]]) -> None:
+    def add_neighbours(self, nodes_and_costs: list[Edge]) -> None:
         if not nodes_and_costs:
             return
-        for node, cost in nodes_and_costs:
-            self.add_neighbour(node, cost)
+        for edge in nodes_and_costs:
+            self.add_neighbour(edge)
 
     def path(self):
         if self.previous is None:
@@ -34,7 +37,7 @@ class Node:
         return f"{self.name} -> " + self.previous.path()
 
     def __str__(self):
-        return f"{self.name}({self.x}, {self.y}), neighbours: {[f'{node.name} cost: {cost}' for (node, cost) in self.neighbours]}"
+        return f"{self.name}({self.x}, {self.y}), neighbours: {[f'{edge.end.name} cost: {edge.cost}' for edge in self.neighbours]}"
 
     def __lt__(self, node: "Node"):
         if type(node) is not type(self):

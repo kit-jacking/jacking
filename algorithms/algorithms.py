@@ -29,8 +29,8 @@ def a_star(start: Node, finish: Node, heuristic: Callable[[Node], float]) -> Nod
             break
 
         for neighbor in current.neighbours:
-            neighbor_node: Node = neighbor[0]
-            cost_to_go_to_neighbor_node = neighbor[1]
+            neighbor_node: Node = neighbor.end
+            cost_to_go_to_neighbor_node = neighbor.cost
 
             g = current.g + cost_to_go_to_neighbor_node
             f = g + heuristic(neighbor_node)
