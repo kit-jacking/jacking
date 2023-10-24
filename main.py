@@ -12,5 +12,5 @@ if __name__ == '__main__':
 
     print("Found path to:")
     print(output)
-    print("The path being:")
+    print("The path being::")
     print(output.path())
