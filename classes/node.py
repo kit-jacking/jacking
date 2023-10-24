@@ -16,7 +16,7 @@ class Node:
 
         self.g: float = g
         self.f: float = f
-        self.previous = previous
+        self.previous: "Node" = previous
 
     def add_neighbour(self, edge: Edge):
         if edge.start is not self:
