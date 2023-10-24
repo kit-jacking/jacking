@@ -25,8 +25,9 @@ def create_nodes_from_linestring(linestring: LineString) -> tuple[Node, Node]:
 
 def create_edge_from_linestring(linestring: LineString,
                                 node_start: Node,
-                                node_end: Node) -> Edge:
-    return Edge(node_start, node_end, linestring.length)
+                                node_end: Node,
+                                edge_id: str) -> Edge:
+    return Edge(node_start, node_end, linestring.length, edge_id)
 
 
 def load_shapefile(file_to_load: str) -> Graph:
@@ -34,7 +35,7 @@ def load_shapefile(file_to_load: str) -> Graph:
 
     nodes: list[Node] = []
     edges: list[Edge] = []
-    conjunctionManager = ConjunctionManager()
+    conjunction_manager = ConjunctionManager()
 
     for i, row in df.iterrows():
         linestring = row.geometry.geom_type.startswith("LineString")
@@ -46,15 +47,13 @@ def load_shapefile(file_to_load: str) -> Graph:
 
         probable_node_start, probable_node_end = create_nodes_from_linestring(geom)
 
-        # Absolutely critical. I don't know why set allows adding more than one identical node.
-        # Perhaps they are not identical. TODO: Consider if there is a better way to check if a node was already added.
-        node_start = conjunctionManager.get_conjunction(probable_node_start)
-        node_end = conjunctionManager.get_conjunction(probable_node_end)
+        node_start = conjunction_manager.get_conjunction(probable_node_start)
+        node_end = conjunction_manager.get_conjunction(probable_node_end)
         nodes.append(node_start)
         nodes.append(node_end)
 
-        edge = create_edge_from_linestring(geom, node_start, node_end)
-        edge2 = create_edge_from_linestring(geom, node_end, node_start)
+        edge = create_edge_from_linestring(geom, node_start, node_end, row["LOKALNYID"])
+        edge2 = create_edge_from_linestring(geom, node_end, node_start, row["LOKALNYID"])
 
         edges.append(edge)
         edges.append(edge2)
