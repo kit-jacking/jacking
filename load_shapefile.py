@@ -1,6 +1,7 @@
 import geopandas as gpd
 from shapely import LineString
 
+from classes.conjunctionManager import ConjunctionManager
 from classes.edge import Edge
 from classes.graph import Graph
 from classes.node import Node
@@ -31,9 +32,9 @@ def create_edge_from_linestring(linestring: LineString,
 def load_shapefile(file_to_load: str) -> Graph:
     df = gpd.read_file(file_to_load)
 
-    nodes_names: list[str] = []
     nodes: list[Node] = []
     edges: list[Edge] = []
+    conjunctionManager = ConjunctionManager()
 
     for i, row in df.iterrows():
         linestring = row.geometry.geom_type.startswith("LineString")
@@ -43,20 +44,14 @@ def load_shapefile(file_to_load: str) -> Graph:
 
         geom: LineString = row.geometry
 
-        node_start, node_end = create_nodes_from_linestring(geom)
+        probable_node_start, probable_node_end = create_nodes_from_linestring(geom)
 
         # Absolutely critical. I don't know why set allows adding more than one identical node.
         # Perhaps they are not identical. TODO: Consider if there is a better way to check if a node was already added.
-        if node_start.name in nodes_names:
-            node_start = nodes[nodes_names.index(node_start.name)]
-        else:
-            nodes.append(node_start)
-            nodes_names.append(node_start.name)
-        if node_end.name in nodes_names:
-            node_end = nodes[nodes_names.index(node_end.name)]
-        else:
-            nodes.append(node_end)
-            nodes_names.append(node_end.name)
+        node_start = conjunctionManager.get_conjunction(probable_node_start)
+        node_end = conjunctionManager.get_conjunction(probable_node_end)
+        nodes.append(node_start)
+        nodes.append(node_end)
 
         edge = create_edge_from_linestring(geom, node_start, node_end)
         edge2 = create_edge_from_linestring(geom, node_end, node_start)
