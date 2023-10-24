@@ -4,6 +4,7 @@ from classes.node import Node
 from classes.priorityQueue import PriorityQueue
 import math
 
+
 def dijkstra_full(graph: Graph, source: Node):
     distances_dict = {}
     previous_dict = {} # node: previous node
