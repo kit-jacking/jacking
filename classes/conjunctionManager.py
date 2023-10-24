@@ -8,5 +8,4 @@ class ConjunctionManager:
     def get_conjunction(self, node: Node) -> Node:
         if not (node.x, node.y) in self.conjunctions.keys():
             self.conjunctions[(node.x, node.y)] = node
-            print("Added ", (node.x, node.y))
         return self.conjunctions[(node.x, node.y)]
