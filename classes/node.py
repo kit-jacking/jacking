@@ -47,3 +47,16 @@ class Node:
 
     def copy(self):
         return Node(self.name, self.x, self.y, self.neighbours, self.g, self.f, self.previous)
+
+    def edge_geo(self):
+        if self.previous is None:
+            return '[' + str(self.x) + ', ' + str(self.y) + '] '
+
+        return '[' + str(self.x) + ', ' + str(self.y) + '], ' + self.previous.edge_geo()
+
+    def create_geojson(self):
+        rtrn = '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {"name": "EPSG:2180"}, "geometry": {"coordinates": ['
+        rtrn += self.edge_geo()
+        rtrn += '], "type": "LineString"}}]}'
+        return rtrn
+
