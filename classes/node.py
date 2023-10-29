@@ -77,6 +77,4 @@ class Node:
             geometry=gpd.points_from_xy(x, y),
             crs="EPSG:2180"
         )
-        gdf = gdf.groupby("id")["geometry"].apply(lambda x: LineString(x.tolist()))
-        gdf = gpd.GeoDataFrame(gdf, geometry="geometry")
         return gdf.to_json(to_wgs84=True)
