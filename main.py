@@ -14,3 +14,9 @@ if __name__ == '__main__':
     print(output)
     print("The path being::")
     print(output.path())
+
+    geojson = output.get_geopandas_geojson()
+    # geojson = output.create_geojson()
+
+    with open("output.geojson", "w") as geojson_file:
+        geojson_file.write(geojson)

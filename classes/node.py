@@ -1,4 +1,7 @@
 import math
+import geopandas as gpd
+from shapely import LineString
+
 from classes.edge import Edge
 
 
@@ -60,3 +63,20 @@ class Node:
         rtrn += '], "type": "LineString"}}]}'
         return rtrn
 
+    def get_path_coordinates(self) -> tuple[list[float], list[float]]:
+        if self.previous is None:
+            return [self.x], [self.y]
+        x, y = self.previous.get_path_coordinates()
+        x.append(self.x)
+        y.append(self.y)
+        return x, y
+
+    def get_geopandas_geojson(self):
+        x, y = self.get_path_coordinates()
+        gdf = gpd.GeoDataFrame(
+            geometry=gpd.points_from_xy(x, y),
+            crs="EPSG:2180"
+        )
+        gdf = gdf.groupby("id")["geometry"].apply(lambda x: LineString(x.tolist()))
+        gdf = gpd.GeoDataFrame(gdf, geometry="geometry")
+        return gdf.to_json(to_wgs84=True)
