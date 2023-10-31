@@ -1,4 +1,7 @@
 import math
+import geopandas as gpd
+from shapely import LineString
+
 from classes.edge import Edge
 
 
@@ -47,3 +50,31 @@ class Node:
 
     def copy(self):
         return Node(self.name, self.x, self.y, self.neighbours, self.g, self.f, self.previous)
+
+    def edge_geo(self):
+        if self.previous is None:
+            return '[' + str(self.x) + ', ' + str(self.y) + '] '
+
+        return '[' + str(self.x) + ', ' + str(self.y) + '], ' + self.previous.edge_geo()
+
+    def create_geojson(self):
+        rtrn = '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {"name": "EPSG:2180"}, "geometry": {"coordinates": ['
+        rtrn += self.edge_geo()
+        rtrn += '], "type": "LineString"}}]}'
+        return rtrn
+
+    def get_path_coordinates(self) -> tuple[list[float], list[float]]:
+        if self.previous is None:
+            return [self.x], [self.y]
+        x, y = self.previous.get_path_coordinates()
+        x.append(self.x)
+        y.append(self.y)
+        return x, y
+
+    def get_geopandas_geojson(self):
+        x, y = self.get_path_coordinates()
+        gdf = gpd.GeoDataFrame(
+            geometry=gpd.points_from_xy(x, y),
+            crs="EPSG:2180"
+        )
+        return gdf.to_json(to_wgs84=True)

@@ -12,4 +12,16 @@ if __name__ == '__main__':
     # output = a_star(start_node, finish_node, distance)
     output = dijkstra(start_node, finish_node)
 
-    print(f"Found path to: {output}\nPath:\n{output.path()}\nCost: {output.g}")
+    print("Found path to:")
+    print(output)
+    print("The path being::")
+    print(output.path())
+
+    geojson = output.get_geopandas_geojson()
+    # geojson = output.create_geojson()
+
+    with open("output.geojson", "w") as geojson_file:
+        geojson_file.write(geojson)
+
+ 
+
