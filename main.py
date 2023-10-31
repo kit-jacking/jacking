@@ -1,4 +1,5 @@
 from algorithms.algorithms import *
+from algorithms.a_star import a_star
 from algorithms.dijkstra import dijkstra
 from example_graphs import example_graph_1, example_graph_halinow
 
