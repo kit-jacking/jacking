@@ -2,7 +2,7 @@ from classes.node import Node
 from classes.priorityQueue import PriorityQueue
 
 def dijkstra(source: Node, target: Node):
-    
+    s = []
     pq = PriorityQueue()
     source.g = 0
     pq.put(source, source.g)
@@ -12,6 +12,10 @@ def dijkstra(source: Node, target: Node):
         
         if curr_node == target:
             break
+        
+        if curr_node in s:
+            continue
+        s.append(curr_node)
         
         for e in curr_node.neighbours:
             new_cost = curr_node.g + e.cost
