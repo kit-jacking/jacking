@@ -1,5 +1,5 @@
-from classes.node import Node
 from classes.edge import Edge
+from classes.node import Node
 
 
 class Graph:
@@ -14,3 +14,19 @@ class Graph:
             if node.name is node_name:
                 return node
         return None
+
+    def generate_nodes_geojson(self, filename_to_be_created: str) -> None:
+        import geopandas as gpd
+        x = []
+        y = []
+        for node in self.nodes:
+            x.append(node.x)
+            y.append(node.y)
+        gdf = gpd.GeoDataFrame(
+            geometry=gpd.points_from_xy(x, y),
+            crs="EPSG:2180"
+        )
+        geojson = gdf.to_json(to_wgs84=True)
+        with open(filename_to_be_created + ".geojson", "w") as geojson_file:
+            geojson_file.write(geojson)
+        return
