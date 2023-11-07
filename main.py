@@ -1,5 +1,7 @@
 from algorithms.algorithms import *
 from algorithms.a_star import a_star
+from algorithms.dijkstra import dijkstra
+from example_graphs import *
 
 
 if __name__ == '__main__':
@@ -11,7 +13,7 @@ if __name__ == '__main__':
     def distance(node: Node) -> float:
         return distance_between_nodes(node, finish_node)
 
-
+    output = a_star(start_node, finish_node,distance, False)
 
     print("Found path to:")
     print(output)

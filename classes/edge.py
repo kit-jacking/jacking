@@ -4,7 +4,7 @@ if TYPE_CHECKING:
 
 
 class Edge:
-    category_speed_dict = {'autostrada': 130, 'ekspresowa': 110, 'glowna': 40,'glownaRuchuPrzyspieszonego': 60, 'zbiorcza': 40,'dojazdowa': 20, 'wewnetrzna': 10, 'lokalna': 30, 'inna':10 }
+    category_speed_dict = {'autostrada': 130, 'ekspresowa': 110, 'glowna': 60,'glownaRuchuPrzyspieszonego': 75, 'zbiorcza': 50,'dojazdowa': 20, 'wewnetrzna': 10, 'lokalna': 40, 'inna':10 }
     
     def __init__(self, start: "Node", end: "Node", cost: float, id: str | None = None, category: str | None = None):
         # in the future: change 'cost' to distance as it now means something else
