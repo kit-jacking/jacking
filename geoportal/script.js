@@ -1,6 +1,10 @@
-var map = L.map('map').setView([52.225, 21.357], 15);
-
-
+var map = L.map('map', {
+	//poziomy zooma
+	minZoom: 14,
+	maxZoom: 17,
+	zoomControl: false
+}
+).setView([52.225, 21.357], 15);
 
 var imageUrl_map = 'mapa.png';
 var imageUrl_orto = 'mapa_orto.png';
