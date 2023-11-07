@@ -52,18 +52,6 @@ class Node:
     def copy(self):
         return Node(self.name, self.x, self.y, self.neighbours, self.g, self.f, self.previous)
 
-    def edge_geo(self):
-        if self.previous is None:
-            return '[' + str(self.x) + ', ' + str(self.y) + '] '
-
-        return '[' + str(self.x) + ', ' + str(self.y) + '], ' + self.previous.edge_geo()
-
-    def create_geojson(self):
-        rtrn = '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {"name": "EPSG:2180"}, "geometry": {"coordinates": ['
-        rtrn += self.edge_geo()
-        rtrn += '], "type": "LineString"}}]}'
-        return rtrn
-
     def get_path_coordinates(self) -> tuple[list[float], list[float]]:
         if self.previous is None:
             return [self.x], [self.y]
@@ -72,10 +60,27 @@ class Node:
         y.append(self.y)
         return x, y
 
-    def get_geopandas_geojson(self):
+    def get_path_gpd_geojson(self) -> str:
         x, y = self.get_path_coordinates()
         gdf = gpd.GeoDataFrame(
             geometry=gpd.points_from_xy(x, y),
             crs="EPSG:2180"
         )
         return gdf.to_json(to_wgs84=True)
+
+    def get_path_gdf(self):
+        x, y = self.get_path_coordinates()
+        line: LineString = LineString(list(zip(x, y)))
+
+        gdf = gpd.GeoDataFrame(
+            geometry=[line],
+            crs="EPSG:2180"
+        )
+
+        return gdf
+
+    def save_path_geopandas_shp(self, filename_to_be_saved: str) -> None:
+        self.get_path_gdf().to_file(filename_to_be_saved + ".shp")
+
+    def save_path_geopandas_geojson(self, filename_to_be_saved: str):
+        self.get_path_gdf().to_file(filename_to_be_saved + ".geojson", driver='GeoJSON')
