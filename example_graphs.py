@@ -1,6 +1,6 @@
-from classes.node import Node
 from classes.edge import Edge
 from classes.graph import Graph
+from classes.node import Node
 
 
 def example_graph_1() -> tuple[Graph, Node, Node]:
@@ -23,16 +23,20 @@ def example_graph_1() -> tuple[Graph, Node, Node]:
     return graph, C, F
 
 
-def example_graph_halinow() -> tuple[Graph, Node, Node]:
+def example_graph_shapefile(path: str) -> tuple[Graph, Node, Node]:
     from load_shapefile import load_shapefile
-    graph: Graph = load_shapefile("shapefiles/Halinow Highways Latane/Halinow Highways Latane.shp")
+    graph: Graph = load_shapefile(path)
 
     node_start: Node = graph.nodes[0]
-    node_end: Node = graph.nodes[len(graph.nodes)//2]
+    node_end: Node = graph.nodes[-1]
     for node in graph.nodes:
-        if node.y > node_start.y: node_start = node
-        if node.y < node_end.y: node_end = node
+        if node.x > node_start.x: node_start = node
+        if node.x < node_end.x: node_end = node
 
     if node_start is node_end:
         raise RuntimeError()
     return graph, node_start, node_end
+
+
+def example_graph_halinow() -> tuple[Graph, Node, Node]:
+    return example_graph_shapefile("shapefiles/Halinow Highways Latane/Halinow Highways Latane.shp")
