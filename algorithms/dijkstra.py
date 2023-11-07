@@ -1,7 +1,7 @@
 from classes.node import Node
 from classes.priorityQueue import PriorityQueue
 
-def dijkstra(source: Node, target: Node):
+def dijkstra(source: Node, target: Node, use_time_as_cost: bool = False):
     s = []
     pq = PriorityQueue()
     source.g = 0
@@ -18,7 +18,11 @@ def dijkstra(source: Node, target: Node):
         s.append(curr_node)
         
         for e in curr_node.neighbours:
-            new_cost = curr_node.g + e.cost
+            if use_time_as_cost:
+                edge_cost = e.time
+            else:
+                edge_cost = e.cost # e.cost means distance
+            new_cost = curr_node.g + edge_cost
             if new_cost < e.end.g:
                 e.end.g = new_cost
                 e.end.previous = curr_node

@@ -4,7 +4,7 @@ from classes.node import Node
 from classes.priorityQueue import PriorityQueue
 
 
-def a_star(start: Node, finish: Node, heuristic: Callable[[Node], float]) -> Node:
+def a_star(start: Node, finish: Node, heuristic: Callable[[Node], float], use_time_as_cost: bool = False) -> Node:
     open: PriorityQueue = PriorityQueue()
     closed: set[str] = set()
 
@@ -25,7 +25,10 @@ def a_star(start: Node, finish: Node, heuristic: Callable[[Node], float]) -> Nod
 
         for neighbor in current.neighbours:
             neighbor_node: Node = neighbor.end
-            cost_to_go_to_neighbor_node = neighbor.cost
+            if use_time_as_cost:
+                cost_to_go_to_neighbor_node = neighbor.time
+            else:
+                cost_to_go_to_neighbor_node = neighbor.cost
 
             g = current.g + cost_to_go_to_neighbor_node
             f = g + heuristic(neighbor_node)

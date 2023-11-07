@@ -26,8 +26,9 @@ def create_nodes_from_linestring(linestring: LineString) -> tuple[Node, Node]:
 def create_edge_from_linestring(linestring: LineString,
                                 node_start: Node,
                                 node_end: Node,
-                                edge_id: str) -> Edge:
-    return Edge(node_start, node_end, linestring.length, edge_id)
+                                edge_id: str,
+                                category: str) -> Edge:
+    return Edge(node_start, node_end, linestring.length, edge_id, category=category)
 
 
 def load_shapefile(file_to_load: str) -> Graph:
@@ -52,8 +53,8 @@ def load_shapefile(file_to_load: str) -> Graph:
         nodes.append(node_start)
         nodes.append(node_end)
 
-        edge = create_edge_from_linestring(geom, node_start, node_end, row["LOKALNYID"])
-        edge2 = create_edge_from_linestring(geom, node_end, node_start, row["LOKALNYID"])
+        edge = create_edge_from_linestring(geom, node_start, node_end, row["LOKALNYID"], row["KLASADROGI"])
+        edge2 = create_edge_from_linestring(geom, node_end, node_start, row["LOKALNYID"], row["KLASADROGI"])
 
         edges.append(edge)
         edges.append(edge2)
@@ -63,5 +64,5 @@ def load_shapefile(file_to_load: str) -> Graph:
 
 
 if __name__ == "__main__":
-    filename = "shapefiles/Halinow Highways/Halinow Highways Latane.shp"
+    filename = "shapefiles/Halinow Highways Latane/Halinow Highways Latane.shp"
     load_shapefile(filename)
