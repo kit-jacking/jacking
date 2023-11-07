@@ -63,5 +63,5 @@ def load_shapefile(file_to_load: str) -> Graph:
 
 
 if __name__ == "__main__":
-    filename = "shapefiles/Halinow Highways/Halinow Highways Latane.shp"
+    filename = "shapefiles/Halinow Highways Latane/Halinow Highways Latane.shp"
     load_shapefile(filename)
