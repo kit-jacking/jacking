@@ -13,14 +13,14 @@ def example_graph_1() -> tuple[Graph, Node, Node]:
 
     edges = [Edge(A, B, 1), Edge(A, C, 2), Edge(B, A, 1),
              Edge(B, D, 2), Edge(C, A, 2), Edge(C, D, 2),
-             Edge(C, F, 6), Edge(D, B, 2), Edge(D, C, 2),
+             Edge(C, F, 10, category='autostrada'), Edge(D, B, 2), Edge(D, C, 2),
              Edge(D, E, 2), Edge(E, D, 2), Edge(E, F, 2),
-             Edge(F, C, 6), Edge(F, E, 2)]
+             Edge(F, C, 10, category='autostrada'), Edge(F, E, 2)]
 
     nodes = [A, B, C, D, E, F]
 
     graph = Graph(nodes, edges)
-    return graph, A, F
+    return graph, C, F
 
 
 def example_graph_shapefile(path: str) -> tuple[Graph, Node, Node]:

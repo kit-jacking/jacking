@@ -1,6 +1,6 @@
 from algorithms.algorithms import *
 from algorithms.a_star import a_star
-from example_graphs import *
+
 
 if __name__ == '__main__':
     print("Preparing graph...")
@@ -12,7 +12,6 @@ if __name__ == '__main__':
         return distance_between_nodes(node, finish_node)
 
 
-    output = a_star(start_node, finish_node, distance)
 
     print("Found path to:")
     print(output)
