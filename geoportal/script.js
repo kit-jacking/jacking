@@ -1,10 +1,15 @@
 var map = L.map('map', {
 	//poziomy zooma
 	minZoom: 14,
-	maxZoom: 17,
+	maxZoom: 16,
 	zoomControl: false
 }
 ).setView([52.225, 21.357], 15);
+
+L.control.zoom({
+	zoomInTitle: 'Przybliż',
+	zoomOutTitle: 'Oddal'
+}).addTo(map);
 
 var imageUrl_map = 'mapa.png';
 var imageUrl_orto = 'mapa_orto.png';
@@ -16,7 +21,6 @@ var map_car = L.imageOverlay(imageUrl_map, latLngBounds, {
     alt: altText,
     interactive: true
 }).addTo(map);
-
 
 var map_orto = L.imageOverlay(imageUrl_orto, latLngBounds, {
     opacity: 1,
@@ -31,3 +35,5 @@ var baseMaps = {
 
 var layerControl = L.control.layers(baseMaps).addTo(map);
 
+
+var nodes = new L.geoJson(halinow_conjuctions).addTo(map);
