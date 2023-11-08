@@ -9,7 +9,7 @@ def distance(node: Node) -> float:
 
 if __name__ == '__main__':
     print("Preparing graph...")
-    shp = "shapefiles/Mazury/PL.PZGiK.341.2806__OT_SKDR_L.shp"
+    shp = "path/to/file/in/epsg:4326.geojson"
     graph, gdf, start_node, finish_node = example_graph_shapefile(shp)
 
     print("Graph prepared, starting on route")

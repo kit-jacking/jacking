@@ -25,9 +25,9 @@ def example_graph_1() -> tuple[Graph, Node, Node]:
     return graph, C, F
 
 
-def example_graph_shapefile(path: str) -> tuple[Graph, gpd.GeoDataFrame, Node, Node]:
+def example_graph_shapefile(path: str, crs: str = "epsg:4326") -> tuple[Graph, gpd.GeoDataFrame, Node, Node]:
     from load_shapefile import create_graph_and_geodataframe
-    (graph, gdf) = create_graph_and_geodataframe(path)
+    (graph, gdf) = create_graph_and_geodataframe(path, crs)
 
     node_start: Node = graph.nodes[0]
     node_end: Node = graph.nodes[-1]
