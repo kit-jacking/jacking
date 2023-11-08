@@ -26,18 +26,18 @@ def create_nodes_from_linestring(linestring: LineString) -> tuple[Node, Node]:
 def create_edge_from_linestring(linestring: LineString,
                                 node_start: Node,
                                 node_end: Node,
-                                edge_id: str,
+                                edge_id: int,
                                 category: str) -> Edge:
     return Edge(node_start, node_end, linestring.length, edge_id, category=category)
 
 
-def load_shapefile(file_to_load: str) -> Graph:
-    df = gpd.read_file(file_to_load)
+def create_graph_and_geodataframe(shapefile_to_load: str) -> tuple[Graph, gpd.GeoDataFrame]:
+    df = gpd.read_file(shapefile_to_load)
+    df.crs = "epsg:2180"
 
     nodes: list[Node] = []
     edges: list[Edge] = []
     conjunction_manager = ConjunctionManager()
-
     for i, row in df.iterrows():
         linestring = row.geometry.geom_type.startswith("LineString")
         if not linestring:
@@ -53,16 +53,16 @@ def load_shapefile(file_to_load: str) -> Graph:
         nodes.append(node_start)
         nodes.append(node_end)
 
-        edge = create_edge_from_linestring(geom, node_start, node_end, row["LOKALNYID"], row["KLASADROGI"])
-        edge2 = create_edge_from_linestring(geom, node_end, node_start, row["LOKALNYID"], row["KLASADROGI"])
+        edge = create_edge_from_linestring(geom, node_start, node_end, i, row["KLASADROGI"])
+        edge2 = create_edge_from_linestring(geom, node_end, node_start, i, row["KLASADROGI"])
 
         edges.append(edge)
         edges.append(edge2)
 
     graph = Graph(list(nodes), list(edges))
-    return graph
+    return graph, df
 
 
 if __name__ == "__main__":
     filename = "shapefiles/Halinow Highways Latane/Halinow Highways Latane.shp"
-    load_shapefile(filename)
+    create_graph_and_geodataframe(filename)

@@ -1,23 +1,25 @@
-from algorithms.algorithms import *
 from algorithms.a_star import a_star
-from algorithms.dijkstra import dijkstra
+from algorithms.algorithms import *
 from example_graphs import *
+
+
+def distance(node: Node) -> float:
+    return distance_between_nodes(node, finish_node)
 
 
 if __name__ == '__main__':
     print("Preparing graph...")
-    graph, start_node, finish_node = example_graph_halinow()
+    shp = "shapefiles/Mazury/PL.PZGiK.341.2806__OT_SKDR_L.shp"
+    graph, gdf, start_node, finish_node = example_graph_shapefile(shp)
+
     print("Graph prepared, starting on route")
 
-
-    def distance(node: Node) -> float:
-        return distance_between_nodes(node, finish_node)
-
-    output = a_star(start_node, finish_node,distance, False)
+    output = a_star(start_node, finish_node, distance, False)
 
     print("Found path to:")
     print(output)
     print("The path being::")
     print(output.path())
 
-    output.save_path_geopandas_geojson("outputs/route")
+    path_gdf = output.get_path_gdf(gdf)
+    path_gdf.to_file("outputs/path.geojson", driver="GeoJSON")
