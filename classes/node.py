@@ -1,6 +1,6 @@
 import math
+
 import geopandas as gpd
-from shapely import LineString
 
 from classes.edge import Edge
 
@@ -20,7 +20,7 @@ class Node:
 
         self.g: float = g
         self.f: float = f
-        self.previous: "Node" = previous
+        self.previous: tuple["Node", Edge] | None = previous
 
     def add_neighbour(self, edge: Edge):
         if edge.start is not self:
@@ -38,7 +38,7 @@ class Node:
         if self.previous is None:
             return self.name
 
-        return f"{self.name} -> " + self.previous.path()
+        return f"{self.name} -> " + self.previous[0].path()
 
     def __str__(self):
         return f"{self.name}({self.x}, {self.y}), neighbours: {[f'{edge.end.name} cost: {edge.cost}' for edge in self.neighbours]}"
@@ -52,35 +52,15 @@ class Node:
     def copy(self):
         return Node(self.name, self.x, self.y, self.neighbours, self.g, self.f, self.previous)
 
-    def get_path_coordinates(self) -> tuple[list[float], list[float]]:
+    def get_path_edges_ids(self) -> list[int]:
         if self.previous is None:
-            return [self.x], [self.y]
-        x, y = self.previous.get_path_coordinates()
-        x.append(self.x)
-        y.append(self.y)
-        return x, y
+            return []
+        path = self.previous[0].get_path_edges_ids()
+        path.append(self.previous[1].id)
+        return path
 
-    def get_path_gpd_geojson(self) -> str:
-        x, y = self.get_path_coordinates()
-        gdf = gpd.GeoDataFrame(
-            geometry=gpd.points_from_xy(x, y),
-            crs="EPSG:2180"
-        )
-        return gdf.to_json(to_wgs84=True)
-
-    def get_path_gdf(self):
-        x, y = self.get_path_coordinates()
-        line: LineString = LineString(list(zip(x, y)))
-
-        gdf = gpd.GeoDataFrame(
-            geometry=[line],
-            crs="EPSG:2180"
-        )
+    def get_path_gdf(self, original_gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+        ids = self.get_path_edges_ids()
+        gdf = original_gdf.iloc[ids]
 
         return gdf
-
-    def save_path_geopandas_shp(self, filename_to_be_saved: str) -> None:
-        self.get_path_gdf().to_file(filename_to_be_saved + ".shp")
-
-    def save_path_geopandas_geojson(self, filename_to_be_saved: str):
-        self.get_path_gdf().to_file(filename_to_be_saved + ".geojson", driver='GeoJSON')
