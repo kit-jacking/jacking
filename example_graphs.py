@@ -1,3 +1,5 @@
+import geopandas as gpd
+
 from classes.edge import Edge
 from classes.graph import Graph
 from classes.node import Node
@@ -23,9 +25,9 @@ def example_graph_1() -> tuple[Graph, Node, Node]:
     return graph, C, F
 
 
-def example_graph_shapefile(path: str) -> tuple[Graph, Node, Node]:
-    from load_shapefile import load_shapefile
-    graph: Graph = load_shapefile(path)
+def example_graph_shapefile(path: str, crs: str = "epsg:4326") -> tuple[Graph, gpd.GeoDataFrame, Node, Node]:
+    from load_shapefile import create_graph_and_geodataframe
+    (graph, gdf) = create_graph_and_geodataframe(path, crs)
 
     node_start: Node = graph.nodes[0]
     node_end: Node = graph.nodes[-1]
@@ -35,8 +37,8 @@ def example_graph_shapefile(path: str) -> tuple[Graph, Node, Node]:
 
     if node_start is node_end:
         raise RuntimeError()
-    return graph, node_start, node_end
+    return graph, gdf, node_start, node_end
 
 
-def example_graph_halinow() -> tuple[Graph, Node, Node]:
+def example_graph_halinow() -> tuple[Graph, gpd.GeoDataFrame, Node, Node]:
     return example_graph_shapefile("shapefiles/Halinow Highways Latane/Halinow Highways Latane.shp")
