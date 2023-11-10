@@ -37,3 +37,21 @@ var layerControl = L.control.layers(baseMaps).addTo(map);
 
 
 var nodes = new L.geoJson(halinow_conjuctions).addTo(map);
+
+map.on("zoomend", function() {
+    var zoomlevel = map.getZoom();
+    if (zoomlevel < 15) 
+	{
+        if (map.hasLayer(nodes)) 
+		{
+            map.removeLayer(nodes);
+        }
+    }
+    if (zoomlevel >= 15) 
+	{
+        if (!map.hasLayer(nodes)) 
+		{
+            map.addLayer(nodes);
+        }
+    }
+});
