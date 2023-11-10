@@ -31,8 +31,10 @@ def create_edge_from_linestring(linestring: LineString,
     return Edge(node_start, node_end, linestring.length, edge_id, category=category)
 
 
-def create_graph_and_geodataframe(shapefile_to_load: str, crs: str = "epsg:4326") -> tuple[Graph, gpd.GeoDataFrame]:
-    df = gpd.read_file(shapefile_to_load)
+def create_graph_and_geodataframe(file_to_load: str, crs: str = "epsg:4326",
+                                  take_directions_into_consideration: bool = True,
+                                  directions_column_name:str = "KIERUNKOWOSC") -> tuple[Graph, gpd.GeoDataFrame]:
+    df = gpd.read_file(file_to_load)
     df.crs = crs
 
     nodes: list[Node] = []
@@ -56,11 +58,22 @@ def create_graph_and_geodataframe(shapefile_to_load: str, crs: str = "epsg:4326"
         nodes.append(node_start)
         nodes.append(node_end)
 
-        edge = create_edge_from_linestring(geom, node_start, node_end, i, row["KLASADROGI"])
-        edge2 = create_edge_from_linestring(geom, node_end, node_start, i, row["KLASADROGI"])
+        if take_directions_into_consideration:
+            direction = row[directions_column_name]
+        else:
+            direction = 0
 
-        edges.append(edge)
-        edges.append(edge2)
+        if direction == 0:
+            edge = create_edge_from_linestring(geom, node_start, node_end, i, row["KLASADROGI"])
+            edge2 = create_edge_from_linestring(geom, node_end, node_start, i, row["KLASADROGI"])
+            edges.append(edge)
+            edges.append(edge2)
+        elif direction == 1:
+            edge = create_edge_from_linestring(geom, node_start, node_end, i, row["KLASADROGI"])
+            edges.append(edge)
+        elif direction == 2:
+            edge2 = create_edge_from_linestring(geom, node_end, node_start, i, row["KLASADROGI"])
+            edges.append(edge2)
 
     graph = Graph(list(nodes), list(edges))
     return graph, df
