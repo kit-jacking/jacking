@@ -32,8 +32,7 @@ def create_edge_from_linestring(linestring: LineString,
 
 
 def create_graph_and_geodataframe(file_to_load: str, crs: str = "epsg:4326",
-                                  take_directions_into_consideration: bool = True,
-                                  directions_column_name:str = "KIERUNKOWOSC") -> tuple[Graph, gpd.GeoDataFrame]:
+                                  directions_column_name: str = "KIERUNKOWOSC") -> tuple[Graph, gpd.GeoDataFrame]:
     df = gpd.read_file(file_to_load)
     df.crs = crs
 
@@ -58,9 +57,9 @@ def create_graph_and_geodataframe(file_to_load: str, crs: str = "epsg:4326",
         nodes.append(node_start)
         nodes.append(node_end)
 
-        if take_directions_into_consideration:
+        try:
             direction = row[directions_column_name]
-        else:
+        except:
             direction = 0
 
         if direction == 0:
