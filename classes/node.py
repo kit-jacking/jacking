@@ -41,7 +41,7 @@ class Node:
         return f"{self.name} -> " + self.previous[0].path()
 
     def __str__(self):
-        return f"{self.name}({self.x}, {self.y}), neighbours: {[f'{edge.end.name} cost: {edge.cost}' for edge in self.neighbours]}"
+        return f"{self.name}({self.x}, {self.y}), neighbours: {[f'{edge.end.name} length: {edge.length}' for edge in self.neighbours]}"
 
     def __lt__(self, node: "Node"):
         if type(node) is not type(self):

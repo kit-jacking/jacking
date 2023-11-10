@@ -9,6 +9,3 @@ def distance_between_points(x1: float, y1: float, x2: float, y2: float) -> float
 
 def distance_between_nodes(node1: Node, node2: Node) -> float:
     return distance_between_points(node1.x, node1.y, node2.x, node2.y)
-
-
-

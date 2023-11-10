@@ -1,11 +1,13 @@
 from collections.abc import Callable
 
 from classes.node import Node
+from classes.edge import Edge
 from classes.priorityQueue import PriorityQueue
 
 
 def a_star(start: Node, finish: Node, heuristic: Callable[[Node], float], use_time_as_cost: bool = False) -> Node:
-    heuristic_divider = 140 if use_time_as_cost else 1
+    highway_speed = Edge.category_speed_dict['autostrada']
+    heuristic_divider = highway_speed if use_time_as_cost else 1
     open: PriorityQueue = PriorityQueue()
     closed: set[str] = set()
     start.g = 0
@@ -28,7 +30,7 @@ def a_star(start: Node, finish: Node, heuristic: Callable[[Node], float], use_ti
             if use_time_as_cost:
                 cost_to_go_to_neighbor_node = neighbor.time
             else:
-                cost_to_go_to_neighbor_node = neighbor.cost
+                cost_to_go_to_neighbor_node = neighbor.length
 
             g = current.g + cost_to_go_to_neighbor_node
             f = g + heuristic(neighbor_node) / heuristic_divider
