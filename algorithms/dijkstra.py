@@ -21,7 +21,7 @@ def dijkstra(source: Node, target: Node, use_time_as_cost: bool = False):
             if use_time_as_cost:
                 edge_cost = e.time
             else:
-                edge_cost = e.cost # e.cost means distance
+                edge_cost = e.length
             new_cost = curr_node.g + edge_cost
             if new_cost < e.end.g:
                 e.end.g = new_cost
