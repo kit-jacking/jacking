@@ -1,3 +1,13 @@
+var blueStyle = 
+{
+	radius: 5,
+	color: "darkblue",
+	opacity: 3,
+	fillOpacity: 1
+};
+
+
+
 var map = L.map('map', {
 	//poziomy zooma
 	minZoom: 14,
@@ -10,6 +20,8 @@ L.control.zoom({
 	zoomInTitle: 'Przybliż',
 	zoomOutTitle: 'Oddal'
 }).addTo(map);
+
+
 
 var imageUrl_map = 'mapa.png';
 var imageUrl_orto = 'mapa_orto.png';
@@ -35,19 +47,29 @@ var baseMaps = {
 
 var layerControl = L.control.layers(baseMaps).addTo(map);
 
+var nodes = new L.geoJson
+(
+	halinow_conjuctions, 
+	{
+		pointToLayer: function (feature, latlng) 
+		{
+				return L.circleMarker(latlng, blueStyle);
+		}
+	}
+);
 
-var nodes = new L.geoJson(halinow_conjuctions).addTo(map);
+
 
 map.on("zoomend", function() {
     var zoomlevel = map.getZoom();
-    if (zoomlevel < 15) 
+    if (zoomlevel < 16) 
 	{
         if (map.hasLayer(nodes)) 
 		{
             map.removeLayer(nodes);
         }
     }
-    if (zoomlevel >= 15) 
+    if (zoomlevel >= 16) 
 	{
         if (!map.hasLayer(nodes)) 
 		{
