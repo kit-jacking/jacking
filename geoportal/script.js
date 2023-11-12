@@ -6,7 +6,7 @@ var blueStyle =
 	fillOpacity: 1
 };
 
-
+var start = '1'
 
 var map = L.map('map', {
 	//poziomy zooma
@@ -54,11 +54,16 @@ var nodes = new L.geoJson
 		pointToLayer: function (feature, latlng) 
 		{
 				return L.circleMarker(latlng, blueStyle);
-		}
-	}
+		},
+		onEachFeature: onEachFeature
+ 	}
 );
 
 
+
+function onEachFeature(feature, layer) {
+	layer.bindPopup(feature.id);
+}
 
 map.on("zoomend", function() {
     var zoomlevel = map.getZoom();
@@ -76,4 +81,10 @@ map.on("zoomend", function() {
             map.addLayer(nodes);
         }
     }
+	console.log(start);
+});
+
+nodes.on('click', function (e) {
+	clickedMarker = e.target
+	console.log(clickedMarker)
 });
