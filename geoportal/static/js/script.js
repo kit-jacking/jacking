@@ -102,16 +102,18 @@ function getAddressInput() {
 	console.log(addressFrom)
 	console.log(addressTo)
 	console.log(APIKey)
-	document.getElementsByName('inpAddressFrom')[0].value = '5'
 
 	// Call Python function
 	$.ajax({
 		type: "POST",
 		url: "/getNodesFromAddress",
-		data: {addressFrom: 'str', addressTo: 'str', APIKey: 'str'},
+		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`},
 		success: function(response) {
-			// Obsługa udanego żądania
 			console.log(response);
+			alert('s');
+		},
+		error: function(xhr,status,error) {
+			alert(`Wystąpił błąd - wpisano niepoprawny adres\nError ${xhr.status}`);
 		}
 	})
 }
