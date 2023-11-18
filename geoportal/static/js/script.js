@@ -14,8 +14,8 @@ var map = L.map('map', {
 	maxZoom: 16,
 	zoomControl: false
 }
-// ).setView([52.225, 21.357], 15); // Halinow
-).setView([54.10512373644716,21.96490637704919], 15) // Mazury
+).setView([52.225, 21.357], 15); // Halinow
+// ).setView([54.10512373644716,21.96490637704919], 15) // Mazury
 
 L.control.zoom({
 	zoomInTitle: 'Przybliż',
@@ -24,8 +24,8 @@ L.control.zoom({
 
 
 
-var imageUrl_map = 'mapa.png';
-var imageUrl_orto = 'mapa_orto.png';
+var imageUrl_map = 'static/images/mapa.png';
+var imageUrl_orto = 'static/images/mapa_orto.png';
 var altText = 'Mapa Halinowa';
 var latLngBounds = L.latLngBounds([[52.236589738, 21.376944963], [52.213842532, 21.336124121]]);
 
