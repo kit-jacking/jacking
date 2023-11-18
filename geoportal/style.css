@@ -6,3 +6,35 @@ html, body, #map
 	margin: 0;
 	filter: contrast(1)
 }
+.inputBars
+{
+	width: 165px;
+	margin-left: 55px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	margin-top: 5px;
+	position: relative;
+	z-index: 1000;
+	border-radius: 5px;
+	font-size: small;
+}
+#inpAddress{
+	height: 20px;
+	border-radius: 5px;
+	width: 150px;
+}
+#btnSearch {
+	transition-duration: 0.4s;
+	background-color: white;
+	color: black;
+	border-radius: 5px;
+	width: 155px;
+	height: 30px;
+	font-size: 16px;
+}
+  
+#btnSearch:hover {
+	background-color: #04AA6D;
+	color: white;
+	font-size: 17px;
+  }

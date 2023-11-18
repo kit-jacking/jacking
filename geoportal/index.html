@@ -24,7 +24,15 @@
 	
 	<body>
 		<script src="halinow_conjuntions.js"></script>
-		<div id="map"></div>
-		<script src = "script.js"></script>
+		<div id="map">
+			<div class="inputBars">
+				<p><input type="text" id="inpAddress" name="inpAddressFrom" placeholder="Punkt poczatkowy" autofocus></p>
+				<p><input type="text" id="inpAddress" name="inpAddressTo" placeholder="Punkt koncowy"></p>
+				<p><input type="text" id="inpAddress" name="inpAPIKey" placeholder="API key"></p>
+				<button type="button" id="btnSearch" onclick="getAddressInput()">Wyznacz trasę</button>
+			</div>
+			<script src = "script.js"></script>
+		</div>
+		
 	</body>
 </html>
