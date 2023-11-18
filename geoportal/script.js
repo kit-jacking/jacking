@@ -88,3 +88,17 @@ nodes.on('click', function (e) {
 	clickedMarker = e.target
 	console.log(clickedMarker)
 });
+
+// Input boxes
+var addressFrom = 'abc';
+var addressTo = '';
+var APIKey = '';
+function getAddressInput() {
+	addressFrom = document.getElementsByName('inpAddressFrom')[0].value
+	addressTo = document.getElementsByName('inpAddressTo')[0].value
+	APIKey = document.getElementsByName('inpAPIKey')[0].value
+	console.log(addressFrom)
+	console.log(addressTo)
+	console.log(APIKey)
+	document.getElementsByName('inpAddressFrom')[0].value = '5'
+}
