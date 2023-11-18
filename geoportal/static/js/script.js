@@ -10,11 +10,12 @@ var start = '1'
 
 var map = L.map('map', {
 	//poziomy zooma
-	minZoom: 14,
+	minZoom: 1,
 	maxZoom: 16,
 	zoomControl: false
 }
-).setView([52.225, 21.357], 15);
+// ).setView([52.225, 21.357], 15); // Halinow
+).setView([54.10512373644716,21.96490637704919], 15) // Mazury
 
 L.control.zoom({
 	zoomInTitle: 'Przybliż',
@@ -49,7 +50,8 @@ var layerControl = L.control.layers(baseMaps).addTo(map);
 
 var nodes = new L.geoJson
 (
-	halinow_conjuctions, 
+	// halinow_conjuctions,
+	mazury_conjuctions, 
 	{
 		pointToLayer: function (feature, latlng) 
 		{
@@ -67,14 +69,14 @@ function onEachFeature(feature, layer) {
 
 map.on("zoomend", function() {
     var zoomlevel = map.getZoom();
-    if (zoomlevel < 16) 
+    if (zoomlevel < 12) 
 	{
         if (map.hasLayer(nodes)) 
 		{
             map.removeLayer(nodes);
         }
     }
-    if (zoomlevel >= 16) 
+    if (zoomlevel >= 12) 
 	{
         if (!map.hasLayer(nodes)) 
 		{
@@ -90,7 +92,7 @@ nodes.on('click', function (e) {
 });
 
 // Input boxes
-var addressFrom = 'abc';
+var addressFrom = '';
 var addressTo = '';
 var APIKey = '';
 function getAddressInput() {
@@ -101,4 +103,15 @@ function getAddressInput() {
 	console.log(addressTo)
 	console.log(APIKey)
 	document.getElementsByName('inpAddressFrom')[0].value = '5'
+
+	// Call Python function
+	$.ajax({
+		type: "POST",
+		url: "/getNodesFromAddress",
+		data: {addressFrom: 'str', addressTo: 'str', APIKey: 'str'},
+		success: function(response) {
+			// Obsługa udanego żądania
+			console.log(response);
+		}
+	})
 }
