@@ -52,6 +52,7 @@ var nodes = new L.geoJson
 (
 	halinow_conjuctions,
 	//mazury_conjuctions, 
+
 	{
 		pointToLayer: function (feature, latlng) 
 		{
@@ -76,6 +77,7 @@ map.on("zoomend", function() {
             map.removeLayer(nodes);
         }
     }
+
     if (zoomlevel >= 16) 
 	{
         if (!map.hasLayer(nodes)) 
