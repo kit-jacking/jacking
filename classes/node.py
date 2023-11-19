@@ -1,6 +1,6 @@
 import math
+
 import geopandas as gpd
-from shapely import LineString
 
 from classes.edge import Edge
 
@@ -8,6 +8,7 @@ from classes.edge import Edge
 class Node:
     def __init__(self, name: str, x: float, y: float, neighbours: list[Edge] = None,
                  g: float = math.inf, f: float = math.inf, previous: "Node" = None):
+        # Name should be unique
         self.name: str = name
         self.x: float = x
         self.y: float = y
@@ -19,7 +20,7 @@ class Node:
 
         self.g: float = g
         self.f: float = f
-        self.previous: "Node" = previous
+        self.previous: tuple["Node", Edge] | None = previous
 
     def add_neighbour(self, edge: Edge):
         if edge.start is not self:
@@ -37,10 +38,10 @@ class Node:
         if self.previous is None:
             return self.name
 
-        return f"{self.name} -> " + self.previous.path()
+        return f"{self.name} -> " + self.previous[0].path()
 
     def __str__(self):
-        return f"{self.name}({self.x}, {self.y}), neighbours: {[f'{edge.end.name} cost: {edge.cost}' for edge in self.neighbours]}"
+        return f"{self.name}({self.x}, {self.y}), neighbours: {[f'{edge.end.name} length: {edge.length}' for edge in self.neighbours]}"
 
     def __lt__(self, node: "Node"):
         if type(node) is not type(self):
@@ -51,30 +52,15 @@ class Node:
     def copy(self):
         return Node(self.name, self.x, self.y, self.neighbours, self.g, self.f, self.previous)
 
-    def edge_geo(self):
+    def get_path_edges_ids(self) -> list[int]:
         if self.previous is None:
-            return '[' + str(self.x) + ', ' + str(self.y) + '] '
+            return []
+        path = self.previous[0].get_path_edges_ids()
+        path.append(self.previous[1].id)
+        return path
 
-        return '[' + str(self.x) + ', ' + str(self.y) + '], ' + self.previous.edge_geo()
+    def get_path_gdf(self, original_gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+        ids = self.get_path_edges_ids()
+        gdf = original_gdf.iloc[ids]
 
-    def create_geojson(self):
-        rtrn = '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {"name": "EPSG:2180"}, "geometry": {"coordinates": ['
-        rtrn += self.edge_geo()
-        rtrn += '], "type": "LineString"}}]}'
-        return rtrn
-
-    def get_path_coordinates(self) -> tuple[list[float], list[float]]:
-        if self.previous is None:
-            return [self.x], [self.y]
-        x, y = self.previous.get_path_coordinates()
-        x.append(self.x)
-        y.append(self.y)
-        return x, y
-
-    def get_geopandas_geojson(self):
-        x, y = self.get_path_coordinates()
-        gdf = gpd.GeoDataFrame(
-            geometry=gpd.points_from_xy(x, y),
-            crs="EPSG:2180"
-        )
-        return gdf.to_json(to_wgs84=True)
+        return gdf

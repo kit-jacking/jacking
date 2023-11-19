@@ -1,27 +1,26 @@
+from algorithms.a_star import a_star
 from algorithms.algorithms import *
-from algorithms.dijkstra import dijkstra
-from example_graphs import example_graph_1, example_graph_halinow
+from example_graphs import *
 
-# graph, start_node, finish_node = example_graph_1()
-graph, start_node, finish_node = example_graph_halinow()
+
+def distance(node: Node) -> float:
+    return distance_between_nodes(node, finish_node)
+
 
 if __name__ == '__main__':
-    def distance(node: Node) -> float:
-        return distance_between_nodes(node, finish_node)
+    print("Preparing graph...")
+    shp = r"C:\Users\qattr\Desktop\STUD\SEM 5\PAG\Projekt\Mazury\PL.PZGiK.341.2806__OT_SKDR_L.shp"
+    graph, gdf, start_node, finish_node = example_graph_shapefile(shp)
 
-    # output = a_star(start_node, finish_node, distance)
-    output = dijkstra(start_node, finish_node)
+    print("Graph prepared, starting on route")
+    graph.generate_nodes_geojson('test')
 
-    print("Found path to:")
-    print(output)
-    print("The path being::")
-    print(output.path())
+    # output = a_star(start_node, finish_node, distance, False)
 
-    geojson = output.get_geopandas_geojson()
-    # geojson = output.create_geojson()
+    # print("Found path to:")
+    # print(output)
+    # print("The path being::")
+    # print(output.path())
 
-    with open("output.geojson", "w") as geojson_file:
-        geojson_file.write(geojson)
-
- 
-
+    # path_gdf = output.get_path_gdf(gdf)
+    # path_gdf.to_file("outputs/path.geojson", driver="GeoJSON")
