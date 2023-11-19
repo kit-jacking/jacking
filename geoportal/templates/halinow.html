@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+
+
+<head>
+	<link rel="stylesheet" type='text/css'href="{{url_for('static', filename='css/style.css')}}">
+
+	<title>Nawigacja</title>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+		crossorigin=""/>
+	
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+		crossorigin=""></script>
+		
+	<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+	
+	<!-- <script defer src="https://pyscript.net/latest/pyscript.js"></script>	 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+	<script src="{{url_for('static', filename='js/halinow_conjuntions.js')}}"></script>
+	<div id="map">
+		<div class="inputBars">
+			<p><input type="text" id="inpAddress" name="inpAddressFrom" placeholder="Punkt poczatkowy" autofocus></p>
+			<p><input type="text" id="inpAddress" name="inpAddressTo" placeholder="Punkt koncowy"></p>
+			<p><input type="text" id="inpAddress" name="inpAPIKey" placeholder="API key"></p>
+			<button type="button" id="btnSearch" onclick="getAddressInput()">Wyznacz trasę</button>
+		</div>
+		<script src = "{{url_for('static', filename='js/script.js')}}"></script>
+	</div>
+	
+</body>
+{% endblock %}
