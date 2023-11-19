@@ -50,8 +50,9 @@ var layerControl = L.control.layers(baseMaps).addTo(map);
 
 var nodes = new L.geoJson
 (
-	// halinow_conjuctions,
-	mazury_conjuctions, 
+	halinow_conjuctions,
+	//mazury_conjuctions, 
+
 	{
 		pointToLayer: function (feature, latlng) 
 		{
@@ -69,14 +70,15 @@ function onEachFeature(feature, layer) {
 
 map.on("zoomend", function() {
     var zoomlevel = map.getZoom();
-    if (zoomlevel < 12) 
+    if (zoomlevel < 16) 
 	{
         if (map.hasLayer(nodes)) 
 		{
             map.removeLayer(nodes);
         }
     }
-    if (zoomlevel >= 12) 
+
+    if (zoomlevel >= 16) 
 	{
         if (!map.hasLayer(nodes)) 
 		{
