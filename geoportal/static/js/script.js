@@ -10,11 +10,12 @@ var start = '1'
 
 var map = L.map('map', {
 	//poziomy zooma
-	minZoom: 14,
+	minZoom: 1,
 	maxZoom: 16,
 	zoomControl: false
 }
-).setView([52.225, 21.357], 15);
+).setView([52.225, 21.357], 15); // Halinow
+// ).setView([54.10512373644716,21.96490637704919], 15) // Mazury
 
 L.control.zoom({
 	zoomInTitle: 'Przybliż',
@@ -23,8 +24,8 @@ L.control.zoom({
 
 
 
-var imageUrl_map = 'mapa.png';
-var imageUrl_orto = 'mapa_orto.png';
+var imageUrl_map = 'static/images/mapa.png';
+var imageUrl_orto = 'static/images/mapa_orto.png';
 var altText = 'Mapa Halinowa';
 var latLngBounds = L.latLngBounds([[52.236589738, 21.376944963], [52.213842532, 21.336124121]]);
 
@@ -49,7 +50,8 @@ var layerControl = L.control.layers(baseMaps).addTo(map);
 
 var nodes = new L.geoJson
 (
-	halinow_conjuctions, 
+	halinow_conjuctions,
+	//mazury_conjuctions, 
 	{
 		pointToLayer: function (feature, latlng) 
 		{
@@ -88,3 +90,30 @@ nodes.on('click', function (e) {
 	clickedMarker = e.target
 	console.log(clickedMarker)
 });
+
+// Input boxes
+var addressFrom = '';
+var addressTo = '';
+var APIKey = '';
+function getAddressInput() {
+	addressFrom = document.getElementsByName('inpAddressFrom')[0].value
+	addressTo = document.getElementsByName('inpAddressTo')[0].value
+	APIKey = document.getElementsByName('inpAPIKey')[0].value
+	console.log(addressFrom)
+	console.log(addressTo)
+	console.log(APIKey)
+
+	// Call Python function
+	$.ajax({
+		type: "POST",
+		url: "/getNodesFromAddress",
+		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`},
+		success: function(response) {
+			console.log(response);
+			alert('s');
+		},
+		error: function(xhr,status,error) {
+			alert(`Wystąpił błąd - wpisano niepoprawny adres\nError ${xhr.status}`);
+		}
+	})
+}
