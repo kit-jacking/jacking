@@ -10,11 +10,11 @@ var start = '1'
 
 var map = L.map('map', {
 	//poziomy zooma
-	minZoom: 1,
+	minZoom: 2,
 	maxZoom: 16,
 	zoomControl: false
 }
-).setView([52.225, 21.357], 15); // Halinow
+).setView([52.225, 21.357], 15); // Halinów
 // ).setView([54.10512373644716,21.96490637704919], 15) // Mazury
 
 L.control.zoom({
@@ -51,8 +51,8 @@ var layerControl = L.control.layers(baseMaps).addTo(map);
 var nodes = new L.geoJson
 (
 	halinow_conjuctions,
-	//mazury_conjuctions, 
-
+	//mazury_conjuctions,
+	//poland_conjuctions
 	{
 		pointToLayer: function (feature, latlng) 
 		{
@@ -77,7 +77,6 @@ map.on("zoomend", function() {
             map.removeLayer(nodes);
         }
     }
-
     if (zoomlevel >= 16) 
 	{
         if (!map.hasLayer(nodes)) 

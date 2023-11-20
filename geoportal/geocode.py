@@ -12,6 +12,18 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('index.html')
+    
+@app.route('/halinow')
+def halinow():
+    return render_template('halinow.html')
+    
+@app.route('/mazury')
+def mazury():
+    return render_template('mazury.html')
+    
+@app.route('/polska')
+def polska():
+    return render_template('polska.html') 
 
 # getAddressInput() function redirects here when "Wyznacz trasę" button is clicked. 
 @app.route('/getNodesFromAddress', methods=['GET', 'POST'])
