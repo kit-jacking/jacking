@@ -15,17 +15,16 @@ app = Flask(__name__)
 
 # Load graphs and create spatial index
 print('Indexing Halinow...')
-graph_halinow, gdf_halinow, node_start_halinow, node_end_halinow = example_graph_shapefile(r'C:\Users\qattr\Desktop\CODE\GitHub\PAG2\jacking\shapefiles\Halinow Highways\Halinow Highways Latane.shp')
+graph_halinow, gdf_halinow, node_start_halinow, node_end_halinow = example_graph_shapefile(r'shapefiles\Halinow Highways\Halinow Highways Latane.shp')
 idx_halinow = index.Index()
 for i, node in enumerate(graph_halinow.nodes):
     idx_halinow.insert(i, (node.x, node.y, node.x, node.y), Node)
 print('Indexing Mazury...')    
-graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = example_graph_shapefile(r'C:\Users\qattr\Desktop\CODE\GitHub\PAG2\jacking\shapefiles\Mazury\PL.PZGiK.341.2806__OT_SKDR_L.shp')
+graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = example_graph_shapefile(r'shapefiles\Mazury\PL.PZGiK.341.2806__OT_SKDR_L.shp')
 idx_mazury = index.Index()
 for i, node in enumerate(graph_mazury.nodes):
     idx_mazury.insert(i, (node.x, node.y, node.x, node.y), Node)
 print('Finished')
-
 
 # Default action when webpage is opened - return html file
 @app.route('/')
