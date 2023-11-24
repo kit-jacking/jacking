@@ -96,7 +96,7 @@ nodes.on('click', function (e) {
 var addressFrom = '';
 var addressTo = '';
 var APIKey = '';
-function getAddressInput() {
+function getAddressInput(mode) {
 	addressFrom = document.getElementsByName('inpAddressFrom')[0].value
 	addressTo = document.getElementsByName('inpAddressTo')[0].value
 	APIKey = document.getElementsByName('inpAPIKey')[0].value
@@ -108,7 +108,7 @@ function getAddressInput() {
 	$.ajax({
 		type: "POST",
 		url: "/getNodesFromAddress",
-		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`},
+		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`, mode:mode},
 		success: function(response) {
 			console.log(response);
 		},
