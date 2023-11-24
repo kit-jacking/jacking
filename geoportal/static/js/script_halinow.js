@@ -10,8 +10,9 @@ var start = '1'
 
 var map = L.map('map', {
 	//poziomy zooma
-	minZoom: 2,
+	minZoom: 13,
 	maxZoom: 16,
+	maxBounds: L.latLngBounds(L.latLng(52.20, 21.28), L.latLng(52.25,21.43)),
 	zoomControl: false
 }
 ).setView([52.225, 21.357], 15); // Halinów
