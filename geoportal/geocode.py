@@ -1,14 +1,18 @@
 from classes.node import Node
 from classes.graph import Graph
+from algorithms.algorithms import *
+from algorithms.a_star import *
+
 
 from flask import Flask, render_template, request, json
 import requests
 from requests.structures import CaseInsensitiveDict
 from urllib import parse
 from example_graphs import *
+from rtree import index
+from pyproj import transform, Proj
 
 app = Flask(__name__)
-
 
 # Default action when webpage is opened - return html file
 @app.route('/')
@@ -17,8 +21,6 @@ def home():
     
 @app.route('/halinow')
 def halinow():
-    nav_graph = example_graph_shapefile(r'C:\Users\qattr\Desktop\CODE\GitHub\PAG2\jacking\shapefiles\Halinow Highways\Halinow Highways.shp')
-    print('Loaded')
     return render_template('halinow.html')
     
 @app.route('/mazury')
@@ -52,6 +54,7 @@ def getNodesFromAddress():
     address_to = parse.quote(request.form.get('addressTo'))
     url_to = f"https://api.geoapify.com/v1/geocode/search?text={address_to}&country=Poland&apiKey={api_key}"
     
+    
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
 
@@ -63,9 +66,37 @@ def getNodesFromAddress():
     else:
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
     
+    # Coordinates transformation
+    in_proj = Proj(init = 'EPSG:4326')
+    out_proj = Proj(init = 'EPSG:2180')
     
-    # print(lat_from, lon_from)
-    # print(lat_to, lon_to)
+    nav_graph, gdf, node_start, node_end = example_graph_shapefile(r'path')
+    
+    tr_lon_from, tr_lat_from = transform(in_proj, out_proj, lon_from, lat_from)
+    tr_lon_to, tr_lat_to = transform(in_proj, out_proj, lon_to, lat_to)
+    
+    print('\n\n\n\n')
+    print(node_start, node_end)
+    print(tr_lon_from, tr_lat_from)
+    print(tr_lon_to, tr_lat_to)
+    
+    # Nearest node search
+    idx = index.Index()
+    for i, node in enumerate(nav_graph.nodes):
+        idx.insert(i, (node.x, node.y, node.x, node.y), Node)
+        
+    hit1 = list(idx.nearest((tr_lon_from, tr_lat_from, tr_lat_from,tr_lat_from), 1))[0]
+    start_node = nav_graph.nodes[hit1]
+    
+    hit2 = list(idx.nearest((tr_lon_to, tr_lat_to, tr_lon_to, tr_lat_to), 1))[0]
+    finish_node = nav_graph.nodes[hit2]
+    
+    def distance(node: Node) -> float:
+        return distance_between_nodes(node, finish_node)
+    
+    output = a_star(start_node, finish_node, distance, False)
+    # path_gdf = output.get_path_gdf(gdf)
+    # path_gdf.to_file(r"path", driver="GeoJSON")
     
     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
