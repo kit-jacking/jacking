@@ -111,7 +111,6 @@ function getAddressInput() {
 		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`},
 		success: function(response) {
 			console.log(response);
-			alert('s');
 		},
 		error: function(xhr,status,error) {
 			alert(`Wystąpił błąd - wpisano niepoprawny adres\nError ${xhr.status}`);

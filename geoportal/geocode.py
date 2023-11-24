@@ -5,8 +5,10 @@ from flask import Flask, render_template, request, json
 import requests
 from requests.structures import CaseInsensitiveDict
 from urllib import parse
+from example_graphs import *
 
 app = Flask(__name__)
+
 
 # Default action when webpage is opened - return html file
 @app.route('/')
@@ -15,6 +17,8 @@ def home():
     
 @app.route('/halinow')
 def halinow():
+    nav_graph = example_graph_shapefile(r'C:\Users\qattr\Desktop\CODE\GitHub\PAG2\jacking\shapefiles\Halinow Highways\Halinow Highways.shp')
+    print('Loaded')
     return render_template('halinow.html')
     
 @app.route('/mazury')
@@ -58,6 +62,7 @@ def getNodesFromAddress():
         lat_to, lon_to = response_json['lat'], response_json['lon']
     else:
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
+    
     
     # print(lat_from, lon_from)
     # print(lat_to, lon_to)
