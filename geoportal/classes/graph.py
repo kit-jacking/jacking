@@ -24,9 +24,10 @@ class Graph:
             y.append(node.y)
         gdf = gpd.GeoDataFrame(
             geometry=gpd.points_from_xy(x, y),
-            crs="EPSG:2180"
+            crs="EPSG:4326"
         )
-        geojson = gdf.to_json(to_wgs84=True)
+        geojson = gdf.to_json()
         with open(filename_to_be_created + ".geojson", "w") as geojson_file:
             geojson_file.write(geojson)
         return
+
