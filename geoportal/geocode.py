@@ -114,7 +114,7 @@ def getNodesFromAddress():
     #print(path_gdf)
     print("-----------------------------------------------------------------")
 
-    path_gdf.to_file(r"outputs/path.geojson", driver="GeoJSON")
+    #path_gdf.to_file(r"outputs/path.geojson", driver="GeoJSON")
     print(path_gdf.to_json())
     
     path =  '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [[ 21.346229178758932,  52.22848751411718], [21.356740593289715, 52.2250019332337],[21.354488147318705, 52.22238756799925], [ 21.360336603523393,52.220354066400716],[ 21.360750902377276,52.220871831603006],[21.361188187667693,   52.22116158852941 ] ],"type": "LineString"}}]}'
