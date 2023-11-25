@@ -52,8 +52,6 @@ var layerControl = L.control.layers(baseMaps).addTo(map);
 var nodes = new L.geoJson
 (
 	halinow_conjuctions,
-	//mazury_conjuctions,
-	//poland_conjuctions
 	{
 		pointToLayer: function (feature, latlng) 
 		{
@@ -93,17 +91,19 @@ nodes.on('click', function (e) {
 	console.log(clickedMarker)
 });
 
+
 // Input boxes
 var addressFrom = '';
 var addressTo = '';
 var APIKey = '';
 function getAddressInput(mode) {
-	addressFrom = document.getElementsByName('inpAddressFrom')[0].value
+	addressFrom = document.getElementsByNgitame('inpAddressFrom')[0].value
 	addressTo = document.getElementsByName('inpAddressTo')[0].value
 	APIKey = document.getElementsByName('inpAPIKey')[0].value
 	console.log(addressFrom)
 	console.log(addressTo)
 	console.log(APIKey)
+	console.log(mode)
 
 	// Call Python function
 	$.ajax({
@@ -112,9 +112,14 @@ function getAddressInput(mode) {
 		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`, mode:mode},
 		success: function(response) {
 			console.log(response);
+			var path = JSON.parse(response);
+			console.log(path );
+            L.geoJSON(path, {}).addTo(map);
+			
 		},
 		error: function(xhr,status,error) {
 			alert(`Wystąpił błąd - wpisano niepoprawny adres\nError ${xhr.status}`);
 		}
+		
 	})
 }

@@ -4,12 +4,13 @@ from algorithms.algorithms import *
 from algorithms.a_star import *
 from example_graphs import *
 
-from flask import Flask, render_template, request, json
+from flask import Flask, render_template, request, json, jsonify
 import requests
 from requests.structures import CaseInsensitiveDict
 from urllib import parse
 from rtree import index
 from pyproj import transform, Proj
+
 
 app = Flask(__name__)
 
@@ -49,10 +50,10 @@ def getNodesFromAddress():
     api_key = request.form.get('APIKey')
     region = request.form.get('mode')
     
-    if region == 0:
+    if int(region) == 0:
         nav_graph = graph_halinow
         gdf = gdf_halinow
-    elif region == 1:
+    elif int(region) == 1:
         nav_graph = graph_mazury
         gdf = gdf_mazury
 
@@ -88,7 +89,7 @@ def getNodesFromAddress():
     
     # Coordinates transformation
     in_proj = Proj(init = 'EPSG:4326')
-    out_proj = Proj(init = 'EPSG:2180')
+    out_proj = Proj(init = 'EPSG:4326')
     
     tr_lon_from, tr_lat_from = transform(in_proj, out_proj, lon_from, lat_from)
     tr_lon_to, tr_lat_to = transform(in_proj, out_proj, lon_to, lat_to)
@@ -107,11 +108,18 @@ def getNodesFromAddress():
     def distance(node: Node) -> float:
         return distance_between_nodes(node, finish_node)
     
-    output = a_star(start_node, finish_node, distance, False)
-    # path_gdf = output.get_path_gdf(gdf)
-    # path_gdf.to_file(r"path", driver="GeoJSON")
+    output = a_star(node_start_halinow, node_end_halinow, distance, False)
+    #print(output)
+    path_gdf = output.get_path_gdf(gdf)
+    #print(path_gdf)
+    print("-----------------------------------------------------------------")
+
+    path_gdf.to_file(r"outputs/path.geojson", driver="GeoJSON")
+    print(path_gdf.to_json())
     
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    path =  '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [[ 21.346229178758932,  52.22848751411718], [21.356740593289715, 52.2250019332337],[21.354488147318705, 52.22238756799925], [ 21.360336603523393,52.220354066400716],[ 21.360750902377276,52.220871831603006],[21.361188187667693,   52.22116158852941 ] ],"type": "LineString"}}]}'
+    #return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    return jsonify(path)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5500)
