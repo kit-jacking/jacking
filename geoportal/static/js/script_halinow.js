@@ -97,7 +97,7 @@ var addressFrom = '';
 var addressTo = '';
 var APIKey = '';
 function getAddressInput(mode) {
-	addressFrom = document.getElementsByNgitame('inpAddressFrom')[0].value
+	addressFrom = document.getElementsByName('inpAddressFrom')[0].value
 	addressTo = document.getElementsByName('inpAddressTo')[0].value
 	APIKey = document.getElementsByName('inpAPIKey')[0].value
 	console.log(addressFrom)
