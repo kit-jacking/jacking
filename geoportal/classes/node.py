@@ -1,8 +1,8 @@
 import math
 
 import geopandas as gpd
-
 from classes.edge import Edge
+from shapely import LineString, Point, MultiLineString
 
 
 class Node:
@@ -59,8 +59,24 @@ class Node:
         path.append(self.previous[1].id)
         return path
 
-    def get_path_gdf(self, original_gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    def get_path_gdf(self, original_gdf: gpd.GeoDataFrame, get_linestrings: bool = False) -> gpd.GeoDataFrame:
         ids = self.get_path_edges_ids()
-        gdf = original_gdf.iloc[ids]
+        if get_linestrings:
+            gdf = original_gdf.iloc[ids]
+            return gdf
 
+        path_points = []
+        for i, row in original_gdf.iloc[ids].iterrows():
+            multilinestring = row.geometry.geom_type.startswith("MultiLineString")
+            linestring = row.geometry.geom_type.startswith("LineString")
+            if multilinestring:
+                geom: MultiLineString = row.geometry.geoms[0]
+            elif linestring:
+                geom: LineString = row.geometry
+            elif not linestring:
+                print("Not linestring, nor multilinesetring: ", row.geometry.geom_type)
+                continue
+            line: LineString = geom
+            path_points.extend([Point(x) for x in line.coords])
+        gdf = gpd.GeoDataFrame(geometry=path_points)
         return gdf
