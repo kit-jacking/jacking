@@ -73,7 +73,7 @@ class Node:
                 geom: MultiLineString = row.geometry.geoms[0]
             elif linestring:
                 geom: LineString = row.geometry
-            elif not linestring:
+            elif not linestring: 
                 print("Not linestring, nor multilinesetring: ", row.geometry.geom_type)
                 continue
             line: LineString = geom
