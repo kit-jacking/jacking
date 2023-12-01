@@ -20,11 +20,11 @@ graph_halinow, gdf_halinow, node_start_halinow, node_end_halinow = create_exampl
 idx_halinow = index.Index()
 for i, node in enumerate(graph_halinow.nodes):
     idx_halinow.insert(i, (node.x, node.y, node.x, node.y), Node)
-print('Indexing Mazury...')    
+'''print('Indexing Mazury...')    
 graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury.geojson')
 idx_mazury = index.Index()
 for i, node in enumerate(graph_mazury.nodes):
-    idx_mazury.insert(i, (node.x, node.y, node.x, node.y), Node)
+    idx_mazury.insert(i, (node.x, node.y, node.x, node.y), Node)'''
 print('Finished')
 
 # Default action when webpage is opened - return html file
@@ -108,7 +108,7 @@ def getNodesFromAddress():
     def distance(node: Node) -> float:
         return distance_between_nodes(node, finish_node)
     
-    output = a_star(node_start_halinow, node_end_halinow, distance, False)
+    output = a_star(start_node, finish_node, distance, False)
     #print(output)
     path_gdf = output.get_path_gdf(gdf)
     #print(path_gdf)
@@ -119,7 +119,7 @@ def getNodesFromAddress():
     
     path =  '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [[ 21.346229178758932,  52.22848751411718], [21.356740593289715, 52.2250019332337],[21.354488147318705, 52.22238756799925], [ 21.360336603523393,52.220354066400716],[ 21.360750902377276,52.220871831603006],[21.361188187667693,   52.22116158852941 ] ],"type": "LineString"}}]}'
     #return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
-    return jsonify(path)
+    return jsonify(path_gdf.to_json())
 
 if __name__ == '__main__':
     app.run(debug=True, port=5500)
