@@ -60,7 +60,7 @@ def getNodesFromAddress():
     # Parse Address From from input box to URL format
     address_from = parse.quote(request.form.get('addressFrom'))
     url_from = f"https://api.geoapify.com/v1/geocode/search?text={address_from}&country=Poland&apiKey={api_key}"
-    
+    #print(url_from)
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
 
@@ -69,12 +69,14 @@ def getNodesFromAddress():
     if resp.status_code == 200:
         response_json = resp.json()['features'][0]['properties']
         lat_from, lon_from = response_json['lat'], response_json['lon']
+        print(lat_from, lon_from)
     else:
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
     
     # Parse Address From from input box to URL format
     address_to = parse.quote(request.form.get('addressTo'))
     url_to = f"https://api.geoapify.com/v1/geocode/search?text={address_to}&country=Poland&apiKey={api_key}"
+    #print( url_to)
     
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
@@ -84,25 +86,19 @@ def getNodesFromAddress():
     if resp.status_code == 200:
         response_json = resp.json()['features'][0]['properties']
         lat_to, lon_to = response_json['lat'], response_json['lon']
+        print(lat_from, lon_from)
     else:
-        return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
-    
-    # Coordinates transformation
-    in_proj = Proj(init = 'EPSG:4326')
-    out_proj = Proj(init = 'EPSG:4326')
-    
-    tr_lon_from, tr_lat_from = transform(in_proj, out_proj, lon_from, lat_from)
-    tr_lon_to, tr_lat_to = transform(in_proj, out_proj, lon_to, lat_to)
+        return json.dumps({'success':False}), 500, {'ContentType':'application/json'}    
     
     # Nearest node search
     idx = index.Index()
     for i, node in enumerate(nav_graph.nodes):
         idx.insert(i, (node.x, node.y, node.x, node.y), Node)
         
-    hit1 = list(idx.nearest((tr_lon_from, tr_lat_from, tr_lat_from,tr_lat_from), 1))[0]
+    hit1 = list(idx.nearest((lon_from, lat_from, lon_from, lat_from), 1))[0]
     start_node = nav_graph.nodes[hit1]
     
-    hit2 = list(idx.nearest((tr_lon_to, tr_lat_to, tr_lon_to, tr_lat_to), 1))[0]
+    hit2 = list(idx.nearest((lon_to, lat_to, lon_to, lat_to), 1))[0]
     finish_node = nav_graph.nodes[hit2]
     
     def distance(node: Node) -> float:
@@ -115,7 +111,7 @@ def getNodesFromAddress():
     print("-----------------------------------------------------------------")
 
     #path_gdf.to_file(r"outputs/path.geojson", driver="GeoJSON")
-    print(path_gdf.to_json())
+    #print(path_gdf.to_json())
     
     path =  '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [[ 21.346229178758932,  52.22848751411718], [21.356740593289715, 52.2250019332337],[21.354488147318705, 52.22238756799925], [ 21.360336603523393,52.220354066400716],[ 21.360750902377276,52.220871831603006],[21.361188187667693,   52.22116158852941 ] ],"type": "LineString"}}]}'
     #return json.dumps({'success':True}), 200, {'ContentType':'application/json'}

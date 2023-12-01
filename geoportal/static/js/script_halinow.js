@@ -90,8 +90,7 @@ nodes.on('click', function (e) {
 	clickedMarker = e.target
 	console.log(clickedMarker)
 });
-
-
+var path_layer = L.geoJSON('{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [],"type": "LineString"}}]}' ,{})
 // Input boxes
 var addressFrom = '';
 var addressTo = '';
@@ -114,8 +113,7 @@ function getAddressInput(mode) {
 			if (start == 0)
 			{
 				map.removeLayer(path_layer)
-			}
-				
+			}				
 			console.log(response);
 			var path = JSON.parse(response);
 			console.log(path);
