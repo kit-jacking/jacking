@@ -6,7 +6,7 @@ var blueStyle =
 	fillOpacity: 1
 };
 
-var start = '1'
+var start = 1
 
 var map = L.map('map', {
 	//poziomy zooma
@@ -111,10 +111,16 @@ function getAddressInput(mode) {
 		url: "/getNodesFromAddress",
 		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`, mode:mode},
 		success: function(response) {
+			if (start == 0)
+			{
+				map.removeLayer(path_layer)
+			}
+				
 			console.log(response);
 			var path = JSON.parse(response);
-			console.log(path );
-            L.geoJSON(path, {}).addTo(map);
+			console.log(path);
+            path_layer = L.geoJSON(path, {}).addTo(map);
+			start = 0;
 			
 		},
 		error: function(xhr,status,error) {
