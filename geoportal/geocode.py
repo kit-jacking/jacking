@@ -61,6 +61,7 @@ def getNodesFromAddress():
     address_from = parse.quote(request.form.get('addressFrom'))
     url_from = f"https://api.geoapify.com/v1/geocode/search?text={address_from}&country=Poland&apiKey={api_key}"
     #print(url_from)
+
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
 
@@ -77,6 +78,10 @@ def getNodesFromAddress():
     address_to = parse.quote(request.form.get('addressTo'))
     url_to = f"https://api.geoapify.com/v1/geocode/search?text={address_to}&country=Poland&apiKey={api_key}"
     #print( url_to)
+    
+    print(address_from)
+    print(address_to)
+    print(api_key)
     
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
@@ -105,17 +110,16 @@ def getNodesFromAddress():
         return distance_between_nodes(node, finish_node)
     
     output = a_star(start_node, finish_node, distance, False)
+    #print('start')
     #print(output)
     path_gdf = output.get_path_gdf(gdf)
-    #print(path_gdf)
-    print("-----------------------------------------------------------------")
-
-    #path_gdf.to_file(r"outputs/path.geojson", driver="GeoJSON")
-    #print(path_gdf.to_json())
-    
-    path =  '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [[ 21.346229178758932,  52.22848751411718], [21.356740593289715, 52.2250019332337],[21.354488147318705, 52.22238756799925], [ 21.360336603523393,52.220354066400716],[ 21.360750902377276,52.220871831603006],[21.361188187667693,   52.22116158852941 ] ],"type": "LineString"}}]}'
-    #return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    #path_gdf.to_file("output.json", driver="GeoJSON")
+    #print(path_gdf.to_json()) 
+    #print('end')
     return jsonify(path_gdf.to_json())
 
 if __name__ == '__main__':
     app.run(debug=True, port=5500)
+#  
+#path =  '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [[ 21.346229178758932,  52.22848751411718], [21.356740593289715, 52.2250019332337],[21.354488147318705, 52.22238756799925], [ 21.360336603523393,52.220354066400716],[ 21.360750902377276,52.220871831603006],[21.361188187667693,   52.22116158852941 ] ],"type": "LineString"}}]}'
+#return json.dumps({'success':True}), 200, {'ContentType':'application/json'}

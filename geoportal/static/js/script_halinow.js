@@ -15,8 +15,7 @@ var map = L.map('map', {
 	maxBounds: L.latLngBounds(L.latLng(52.20, 21.28), L.latLng(52.25,21.43)),
 	zoomControl: false
 }
-).setView([52.225, 21.357], 15); // Halinów
-// ).setView([54.10512373644716,21.96490637704919], 15) // Mazury
+).setView([52.225, 21.357], 15);
 
 L.control.zoom({
 	zoomInTitle: 'Przybliż',
@@ -90,8 +89,16 @@ nodes.on('click', function (e) {
 	clickedMarker = e.target
 	console.log(clickedMarker)
 });
-var path_layer = L.geoJSON('{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [],"type": "LineString"}}]}' ,{})
+//var path_layer = L.geoJSON('{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [],"type": "LineString"}}]}' ,{})
 // Input boxes
+var polyline = new L.Polyline([[0,0],[0,0]], {
+	color: 'blue',
+}).addTo(map);
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
 var addressFrom = '';
 var addressTo = '';
 var APIKey = '';
@@ -103,27 +110,41 @@ function getAddressInput(mode) {
 	console.log(addressTo)
 	console.log(APIKey)
 	console.log(mode)
-
+	
+	delay(1000).then(() => console.log('ran after 1 second1 passed'));
 	// Call Python function
 	$.ajax({
 		type: "POST",
 		url: "/getNodesFromAddress",
 		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`, mode:mode},
-		success: function(response) {
+		success: function(response) {			
+			console.log(response);
+			
 			if (start == 0)
 			{
-				map.removeLayer(path_layer)
-			}				
-			console.log(response);
+				map.removeLayer(polyline)
+			}
+
 			var path = JSON.parse(response);
-			console.log(path);
-            path_layer = L.geoJSON(path, {}).addTo(map);
+			var coordinates = [];
+
+			for (let i = 0; i < path.features.length; i++) {
+				let obj = path.features[i].geometry.coordinates;
+				coordinates.push([obj[1], obj[0]]);
+			}
+
+			polyline = new L.Polyline(coordinates, {
+				color: 'blue',
+				weight: 5
+			});
+
+			polyline.addTo(map);
+
 			start = 0;
-			
 		},
 		error: function(xhr,status,error) {
 			alert(`Wystąpił błąd - wpisano niepoprawny adres\nError ${xhr.status}`);
-		}
-		
+		}		
 	})
 }
+
