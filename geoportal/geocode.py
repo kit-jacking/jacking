@@ -1,5 +1,8 @@
 from classes.node import Node
 from classes.graph import Graph
+from algorithms.a_star import *
+from classes.node import Node
+from classes.graph import Graph
 from algorithms.algorithms import *
 from algorithms.a_star import *
 from example_graphs import *
@@ -14,18 +17,7 @@ from pyproj import transform, Proj
 
 app = Flask(__name__)
 
-# Load graphs and create spatial index
-print('Indexing Halinow...')
-graph_halinow, gdf_halinow, node_start_halinow, node_end_halinow = create_example_graph_from_file(r'geometries\halinow.geojson')
-idx_halinow = index.Index()
-for i, node in enumerate(graph_halinow.nodes):
-    idx_halinow.insert(i, (node.x, node.y, node.x, node.y), Node)
-'''print('Indexing Mazury...')    
-graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury.geojson')
-idx_mazury = index.Index()
-for i, node in enumerate(graph_mazury.nodes):
-    idx_mazury.insert(i, (node.x, node.y, node.x, node.y), Node)'''
-print('Finished')
+
 
 # Default action when webpage is opened - return html file
 @app.route('/')
@@ -47,12 +39,26 @@ def polska():
 # getAddressInput() function redirects here when "Wyznacz trasę" button is clicked. 
 @app.route('/getNodesFromAddress', methods=['GET', 'POST'])
 def getNodesFromAddress():
+    # Load graphs and create spatial index
+    print('Indexing Halinow...')
+    graph_halinow, gdf_halinow, node_start_halinow, node_end_halinow = create_example_graph_from_file(r'geometries\halinow.geojson')
+    idx_halinow = index.Index()
+    for i, node in enumerate(graph_halinow.nodes):
+        idx_halinow.insert(i, (node.x, node.y, node.x, node.y), Node)
+    '''print('Indexing Mazury...')    
+    graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury.geojson')
+    idx_mazury = index.Index()
+    for i, node in enumerate(graph_mazury.nodes):
+        idx_mazury.insert(i, (node.x, node.y, node.x, node.y), Node)'''
+    print('Finished')
     api_key = request.form.get('APIKey')
     region = request.form.get('mode')
     
     if int(region) == 0:
         nav_graph = graph_halinow
         gdf = gdf_halinow
+        print(nav_graph)
+        print(gdf)
     elif int(region) == 1:
         nav_graph = graph_mazury
         gdf = gdf_mazury
