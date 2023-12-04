@@ -73,10 +73,23 @@ class Node:
                 geom: MultiLineString = row.geometry.geoms[0]
             elif linestring:
                 geom: LineString = row.geometry
-            elif not linestring: 
+            elif not linestring:
                 print("Not linestring, nor multilinesetring: ", row.geometry.geom_type)
                 continue
-            line: LineString = geom
-            path_points.extend([Point(x) for x in line.coords])
+            # Add every point except the last
+            path_points.extend([Point(x) for x in geom.coords[:-1]])
+
+        # Add the last point
+        lastRow = original_gdf.iloc[ids].iloc[-1]
+        multilinestring = lastRow.geometry.geom_type.startswith("MultiLineString")
+        linestring = lastRow.geometry.geom_type.startswith("LineString")
+        if multilinestring:
+            geom: MultiLineString = row.geometry.geoms[0]
+        elif linestring:
+            geom: LineString = row.geometry
+        elif not linestring:
+            raise RuntimeError("Last geometry is not linestring, nor multilinesetring: " + row.geometry.geom_type)
+        path_points.extend([Point(geom.coords[-1])])
+
         gdf = gpd.GeoDataFrame(geometry=path_points)
         return gdf
