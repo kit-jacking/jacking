@@ -1,8 +1,10 @@
 import math
 
 import geopandas as gpd
-from classes.edge import Edge
 from shapely import LineString, Point, MultiLineString
+from shapely.ops import linemerge
+
+from geoportal.classes.edge import Edge
 
 
 class Node:
@@ -59,37 +61,38 @@ class Node:
         path.append(self.previous[1].id)
         return path
 
+    def get_linestring_geometry(self, row: gpd.GeoSeries) -> LineString:
+        geom_type: str = row.geometry.geom_type
+        if geom_type.startswith("LineString"):
+            geom: LineString = row.geometry
+        elif geom_type.startswith("MultiLineString"):
+            if len(row.geometry.geoms) > 1:
+                raise RuntimeError(
+                    "Multilinestring has more than 1 linestrings which is not allowed. Fix input data. It currently has: " +
+                    len(row.geometry.geoms))
+            geom: LineString = row.geometry.geoms[0]
+        else:
+            raise RuntimeError("Last geometry was not linestring nor multilinestring: " + row.geometry.geom_type)
+        return geom
+
     def get_path_gdf(self, original_gdf: gpd.GeoDataFrame, get_linestrings: bool = False) -> gpd.GeoDataFrame:
         ids = self.get_path_edges_ids()
-        if get_linestrings:
+        if get_linestrings or len(original_gdf.iloc[ids]) == 1:
             gdf = original_gdf.iloc[ids]
             return gdf
 
-        path_points = []
+        if len(original_gdf.iloc[ids]) == 0:
+            raise RuntimeError("There are no linestrings on the path")
+
+        line_strings: list[LineString] = []
         for i, row in original_gdf.iloc[ids].iterrows():
-            multilinestring = row.geometry.geom_type.startswith("MultiLineString")
-            linestring = row.geometry.geom_type.startswith("LineString")
-            if multilinestring:
-                geom: MultiLineString = row.geometry.geoms[0]
-            elif linestring:
-                geom: LineString = row.geometry
-            elif not linestring:
-                print("Not linestring, nor multilinesetring: ", row.geometry.geom_type)
-                continue
-            # Add every point except the last
-            path_points.extend([Point(x) for x in geom.coords[:-1]])
+            geom: LineString = self.get_linestring_geometry(row)
+            line_strings.append(geom)
+            continue
 
-        # Add the last point
-        lastRow = original_gdf.iloc[ids].iloc[-1]
-        multilinestring = lastRow.geometry.geom_type.startswith("MultiLineString")
-        linestring = lastRow.geometry.geom_type.startswith("LineString")
-        if multilinestring:
-            geom: MultiLineString = row.geometry.geoms[0]
-        elif linestring:
-            geom: LineString = row.geometry
-        elif not linestring:
-            raise RuntimeError("Last geometry is not linestring, nor multilinesetring: " + row.geometry.geom_type)
-        path_points.extend([Point(geom.coords[-1])])
-
+        path: LineString = linemerge(MultiLineString(line_strings))
+        path_points = [Point(x) for x in path.coords]
+        path_points = path_points[::-1]
         gdf = gpd.GeoDataFrame(geometry=path_points)
+        gdf['id'] = range(0, len(gdf))
         return gdf

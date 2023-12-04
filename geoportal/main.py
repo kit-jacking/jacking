@@ -15,6 +15,13 @@ if __name__ == '__main__':
     geofile = "IT CAN'T WORK IF YOU DON'T SPECIFY THE PATH, NOW, CAN IT?"
     start_time = time.time()
     graph, gdf, start_node, finish_node = create_example_graph_from_file(geofile)
+    for node in graph.nodes:
+        if node.y == 52.22607600097249 and node.x == 21.35621683116744:
+            start_node = node
+            print("rewritten start")
+        elif node.y == 52.230504323308914 and node.x == 21.348326441290315:
+            finish_node = node
+            print("rewritten end")
     elapsed_time = time.time() - start_time
 
     print(f"{elapsed_time} has passed")
