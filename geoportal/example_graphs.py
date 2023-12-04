@@ -41,4 +41,4 @@ def create_example_graph_from_file(path: str, crs: str = "epsg:4326") -> tuple[G
 
 
 def example_graph_halinow() -> tuple[Graph, gpd.GeoDataFrame, Node, Node]:
-    return example_graph_shapefile("shapefiles/Halinow Highways Latane/Halinow Highways Latane.shp")
+    return create_example_graph_from_file("geoportal/geometries/halinow.geojson")

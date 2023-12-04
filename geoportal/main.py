@@ -12,9 +12,9 @@ def distance(node: Node) -> float:
 if __name__ == '__main__':
     print("Preparing graph...")
 
-    shp = "IT CAN'T WORK IF YOU DON'T SPECIFY THE PATH, NOW, CAN IT?"
+    geofile = "IT CAN'T WORK IF YOU DON'T SPECIFY THE PATH, NOW, CAN IT?"
     start_time = time.time()
-    graph, gdf, start_node, finish_node = example_graph_shapefile(shp)
+    graph, gdf, start_node, finish_node = create_example_graph_from_file(geofile)
     elapsed_time = time.time() - start_time
 
     print(f"{elapsed_time} has passed")
