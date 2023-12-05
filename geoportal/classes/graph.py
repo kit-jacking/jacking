@@ -1,5 +1,6 @@
-from classes.edge import Edge
-from classes.node import Node
+from geoportal.classes.edge import Edge
+from geoportal.classes.node import Node
+import math
 
 
 class Graph:
@@ -31,3 +32,8 @@ class Graph:
             geojson_file.write(geojson)
         return
 
+    def clear(self) -> None:
+        for node in self.nodes:
+            node.g = math.inf
+            node.f = math.inf
+            node.previous = None

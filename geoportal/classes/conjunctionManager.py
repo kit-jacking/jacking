@@ -1,4 +1,4 @@
-from classes.node import Node
+from geoportal.classes.node import Node
 
 
 class ConjunctionManager:
