@@ -4,7 +4,7 @@ import geopandas as gpd
 from shapely import LineString, Point, MultiLineString
 from shapely.ops import linemerge
 
-from classes.edge import Edge
+from geoportal.classes.edge import Edge
 
 
 class Node:
