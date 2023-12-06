@@ -15,6 +15,8 @@
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 		integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
 		crossorigin=""/>
+		
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"></head>
 	
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 		integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -34,6 +36,17 @@
 			<p><input type="text" id="inpAddress" name="inpAddressTo" placeholder="Punkt końcowy"></p>
 			<p><input type="text" id="inpAddress" name="inpAPIKey" placeholder="Klucz API"></p>
 			<button type="button" id="btnSearch" onclick="getAddressInput(0)">Wyznacz trasę</button>
+			<label class="toggle">
+				<input type="checkbox" id="Algorythm">
+				<span class="slider"></span>
+				<span class="labels" data-on="A*" data-off="Dijkstra"></span>
+			</label>
+			<label class="toggle">
+				<input type="checkbox">
+				<span class="slider"></span>
+				<span class="labels" data-on="Odleglość" data-off="Czas"></span>
+			</label>
+			
 		</div>
 		<script src = "{{url_for('static', filename='js/script_halinow.js')}}"></script>
 	</div>

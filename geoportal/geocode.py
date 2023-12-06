@@ -52,7 +52,7 @@ def polska():
 # getAddressInput() function redirects here when "Wyznacz trasę" button is clicked. 
 @app.route('/getNodesFromAddress', methods=['GET', 'POST'])
 def  getNodesFromAddress():
-    graph_halinow, gdf_halinow, node_start_halinow, node_end_halinow = create_example_graph_from_file(r'geometries\halinow.geojson')
+    #graph_halinow, gdf_halinow, node_start_halinow, node_end_halinow = create_example_graph_from_file(r'geometries\halinow.geojson')
     #graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury.geojson')
     
     
@@ -133,6 +133,7 @@ def  getNodesFromAddress():
     #path_gdf.to_file("output.json", driver="GeoJSON")
     print(path_gdf.to_json()) 
     #print('end')
+    nav_graph.clear()
     return jsonify(path_gdf.to_json())
 
 if __name__ == '__main__':
