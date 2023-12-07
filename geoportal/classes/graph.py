@@ -1,5 +1,5 @@
-from geoportal.classes.edge import Edge
-from geoportal.classes.node import Node
+from classes.edge import Edge
+from classes.node import Node
 import math
 
 
