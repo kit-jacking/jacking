@@ -28,9 +28,10 @@ if __name__ == '__main__':
     print("Graph prepared, mapping route...")
 
     start_time = time.time()
-    output = a_star(start_node, finish_node, distance, False)
+    output: Node = a_star(start_node, finish_node, distance, False)
     elapsed_time = time.time() - start_time
 
+    print(f"Length in CRS EPSG:2180 = {round(output.get_path_length(gdf, length_crs='EPSG:2180'), 3)} m")
     print(f"{elapsed_time} has passed")
     print("Saving file...")
 
