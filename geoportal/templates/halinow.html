@@ -36,19 +36,20 @@
 			<p><input type="text" id="inpAddress" name="inpAddressTo" placeholder="Punkt końcowy"></p>
 			<p><input type="text" id="inpAddress" name="inpAPIKey" placeholder="Klucz API"></p>
 			<button type="button" id="btnSearch" onclick="getAddressInput(0)">Wyznacz trasę</button>
+			<script src = "{{url_for('static', filename='js/script_halinow.js')}}"></script>
 			<label class="toggle">
-				<input type="checkbox" id="Algorythm">
+				<input type="checkbox" id="Algorythm" onclick="algorithmFunction()">
 				<span class="slider"></span>
 				<span class="labels" data-on="A*" data-off="Dijkstra"></span>
 			</label>
 			<label class="toggle">
-				<input type="checkbox">
+				<input type="checkbox" id="cost" onclick="costFunction()">
 				<span class="slider"></span>
 				<span class="labels" data-on="Odleglość" data-off="Czas"></span>
 			</label>
 			
 		</div>
-		<script src = "{{url_for('static', filename='js/script_halinow.js')}}"></script>
+		
 	</div>
 	
 </body>
