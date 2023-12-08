@@ -5,6 +5,7 @@ from classes.node import Node
 from classes.graph import Graph
 from algorithms.algorithms import *
 from algorithms.a_star import *
+from algorithms.dijkstra import *
 from example_graphs import *
 
 from flask import Flask, render_template, request, json, jsonify
@@ -25,7 +26,7 @@ idx_halinow = index.Index()
 for i, node in enumerate(graph_halinow.nodes):
     idx_halinow.insert(i, (node.x, node.y, node.x, node.y), Node)
 print('Indexing Mazury...')    
-graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury.geojson')
+graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury2.geojson')
 idx_mazury = index.Index()
 for i, node in enumerate(graph_mazury.nodes):
     idx_mazury.insert(i, (node.x, node.y, node.x, node.y), Node)
@@ -58,6 +59,9 @@ def  getNodesFromAddress():
     
     api_key = request.form.get('APIKey')
     region = request.form.get('mode')
+    algorithm = request.form.get('algorithm')
+    cost = request.form.get('cost')
+    print(algorithm)
     
     if int(region) == 0:
         nav_graph = graph_halinow
@@ -87,7 +91,7 @@ def  getNodesFromAddress():
     if resp.status_code == 200:
         response_json = resp.json()['features'][0]['properties']
         lat_from, lon_from = response_json['lat'], response_json['lon']
-        print(lat_from, lon_from)
+        #print(lat_from, lon_from)
     else:
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
     
@@ -100,7 +104,7 @@ def  getNodesFromAddress():
     if resp.status_code == 200:
         response_json = resp.json()['features'][0]['properties']
         lat_to, lon_to = response_json['lat'], response_json['lon']
-        print(lat_from, lon_from)
+        #print(lat_to, lon_to)
     else:
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}    
     print(address_from)
@@ -124,19 +128,31 @@ def  getNodesFromAddress():
         
     #print(star_node)
     #print(finish_node)
-    
-    output = a_star(start_node, finish_node, distance, False)
-    #print('start')
-    #print(output)
+    if cost == "distance":
+        use_time_as_cost = False
+        print("time:", use_time_as_cost)
+    else:
+        use_time_as_cost = True
+        print("time:", use_time_as_cost)
+       
+    print(algorithm == "A*")
+    if algorithm == "dijkstra":   
+        print("Finding path with dijsktra algorithm...")    
+        output = dijkstra(start_node, finish_node, use_time_as_cost)
+    elif algorithm == "A*":
+        print("Finding path with A* algorithm...")  
+        output = a_star(start_node, finish_node, distance, use_time_as_cost)    
+    else:
+        return json.dumps({'success':False}), 500, {'ContentType':'application/json'}    
+    print('path has been found') 
+    #print(output) 
     path_gdf = output.get_path_gdf(gdf)
     #path_gdf.to_file("output.json", driver="GeoJSON")
-    #print(path_gdf.to_json()) 
+    
     #print('end')
     nav_graph.clear()
     return jsonify(path_gdf.to_json())
 
 if __name__ == '__main__':
     app.run(debug=False, port=5500)
-#  
-#path =  '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {}, "geometry": {"coordinates": [[ 21.346229178758932,  52.22848751411718], [21.356740593289715, 52.2250019332337],[21.354488147318705, 52.22238756799925], [ 21.360336603523393,52.220354066400716],[ 21.360750902377276,52.220871831603006],[21.361188187667693,   52.22116158852941 ] ],"type": "LineString"}}]}'
-#return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+
