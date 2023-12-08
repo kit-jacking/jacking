@@ -26,7 +26,7 @@ idx_halinow = index.Index()
 for i, node in enumerate(graph_halinow.nodes):
     idx_halinow.insert(i, (node.x, node.y, node.x, node.y), Node)
 print('Indexing Mazury...')    
-graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury2.geojson')
+graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury.geojson')
 idx_mazury = index.Index()
 for i, node in enumerate(graph_mazury.nodes):
     idx_mazury.insert(i, (node.x, node.y, node.x, node.y), Node)
