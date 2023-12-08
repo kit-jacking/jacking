@@ -96,3 +96,9 @@ class Node:
         gdf = gpd.GeoDataFrame(geometry=path_points)
         gdf['id'] = range(0, len(gdf))
         return gdf
+
+    def get_path_length(self, original_gdf: gpd.GeoDataFrame, length_crs: str = "EPSG:2180") -> float:
+        ids = self.get_path_edges_ids()
+        gdf = original_gdf.iloc[ids]
+        gdf = gdf.to_crs(length_crs)
+        return sum(gdf.geometry.length)
