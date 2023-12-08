@@ -99,10 +99,13 @@ function delay(time) {
   return new Promise(resolve => setTimeout(resolve, time));
 }
 
+var algorithm = "dijkstra";
+var cost = "time";
 var addressFrom = '';
 var addressTo = '';
 var APIKey = '';
 function getAddressInput(mode) {
+	console.log(algorithm);
 	addressFrom = document.getElementsByName('inpAddressFrom')[0].value
 	addressTo = document.getElementsByName('inpAddressTo')[0].value
 	APIKey = document.getElementsByName('inpAPIKey')[0].value
@@ -116,7 +119,7 @@ function getAddressInput(mode) {
 	$.ajax({
 		type: "POST",
 		url: "/getNodesFromAddress",
-		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`, mode:mode},
+		data: {addressFrom: `${addressFrom}`, addressTo: `${addressTo}`, APIKey: `${APIKey}`, mode:mode, algorithm: algorithm, cost: cost},
 		success: function(response) {			
 			console.log(response);
 			
@@ -148,3 +151,38 @@ function getAddressInput(mode) {
 	})
 }
 
+function algorithmFunction() {
+	// Get the checkbox
+	var checkBox = document.getElementById("Algorythm");
+	// Get the output text
+
+	// If the checkbox is checked, display the output text
+	if (checkBox.checked == true)
+	{
+		console.log("A*");
+		algorithm = "A*";	
+	} 
+	else 
+	{
+		console.log("dijkstra");
+		algorithm = "dijkstra";
+	}
+}
+
+function costFunction() {
+	// Get the checkbox
+	var checkBox = document.getElementById("cost");
+	// Get the output text
+
+	// If the checkbox is checked, display the output text
+	if (checkBox.checked == true)
+	{
+		console.log("distance");
+		cost = "distance";
+	} 
+	else 
+	{
+		console.log("time");
+		cost = "time";
+	}
+}
