@@ -1,8 +1,8 @@
 from collections.abc import Callable
 
-from classes.node import Node
-from classes.edge import Edge
-from classes.priorityQueue import PriorityQueue
+from geoportal.classes.node import Node
+from geoportal.classes.edge import Edge
+from geoportal.classes.priorityQueue import PriorityQueue
 
 
 def a_star(start: Node, finish: Node, heuristic: Callable[[Node], float], use_time_as_cost: bool = False) -> Node:
