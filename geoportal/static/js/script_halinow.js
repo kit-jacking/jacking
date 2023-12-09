@@ -95,9 +95,9 @@ var polyline = new L.Polyline([[0,0],[0,0]], {
 	color: 'blue',
 }).addTo(map);
 
-function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-}
+
+
+var popup = L.popup([0,0], {content: '<p>Hello world!<br />This is a nice popup.</p>'});
 
 var algorithm = "dijkstra";
 var cost = "time";
@@ -113,8 +113,6 @@ function getAddressInput(mode) {
 	console.log(addressTo)
 	console.log(APIKey)
 	console.log(mode)
-	
-	delay(1000).then(() => console.log('ran after 1 second1 passed'));
 	// Call Python function
 	$.ajax({
 		type: "POST",
@@ -128,7 +126,8 @@ function getAddressInput(mode) {
 				map.removeLayer(polyline)
 			}
 
-			var path = JSON.parse(response);
+			var path = JSON.parse(response.path);
+			console.log('Długość: ' + response.distance)
 			var coordinates = [];
 
 			for (let i = 0; i < path.features.length; i++) {
@@ -140,7 +139,13 @@ function getAddressInput(mode) {
 				color: 'blue',
 				weight: 5
 			});
-
+			console.log(path.features.length)
+			console.log(coordinates.length)
+			console.log(coordinates.length / 2)
+			
+			let latlon = coordinates[Math.round(coordinates.length / 2)]
+			console.log(latlon)
+			popup = L.popup([latlon[0], latlon[1]], {content: '<center>' + 'Dystans: ' + Math.round(response.distance) + ' m</center>'}).openOn(map);
 			polyline.addTo(map);
 
 			start = 0;

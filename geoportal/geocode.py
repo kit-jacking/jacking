@@ -14,6 +14,7 @@ from requests.structures import CaseInsensitiveDict
 from urllib import parse
 from rtree import index
 from pyproj import transform, Proj
+import time
 
 
 app = Flask(__name__)
@@ -128,9 +129,11 @@ def  getNodesFromAddress():
         
     #print(star_node)
     #print(finish_node)
+    dist = 0
     if cost == "distance":
         use_time_as_cost = False
         print("time:", use_time_as_cost)
+ 
     else:
         use_time_as_cost = True
         print("time:", use_time_as_cost)
@@ -138,20 +141,31 @@ def  getNodesFromAddress():
     print(algorithm == "A*")
     if algorithm == "dijkstra":   
         print("Finding path with dijsktra algorithm...")    
+        start_time = time.time()
         output = dijkstra(start_node, finish_node, use_time_as_cost)
+        elapsed_time = time.time() - start_time
+        path_gdf = output.get_path_gdf(gdf)
+        dist = output.get_path_length(gdf, length_crs='EPSG:2178')
+        print("dist:", dist)
     elif algorithm == "A*":
         print("Finding path with A* algorithm...")  
-        output = a_star(start_node, finish_node, distance, use_time_as_cost)    
+        start_time = time.time()
+        output = a_star(start_node, finish_node, distance, use_time_as_cost)   
+        elapsed_time = time.time() - start_time
+        path_gdf = output.get_path_gdf(gdf)
+        dist = output.get_path_length(gdf, length_crs='EPSG:2178')
+        print("dist:", dist)
     else:
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}    
     print('path has been found') 
+    print(f"{elapsed_time} has passed")
     #print(output) 
-    path_gdf = output.get_path_gdf(gdf)
-    #path_gdf.to_file("output.json", driver="GeoJSON")
     
+    #path_gdf.to_file("output.json", driver="GeoJSON")
     #print('end')
     nav_graph.clear()
-    return jsonify(path_gdf.to_json())
+    
+    return jsonify({"path": path_gdf.to_json(), "distance": dist})
 
 if __name__ == '__main__':
     app.run(debug=False, port=5500)
