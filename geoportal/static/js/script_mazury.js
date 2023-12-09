@@ -77,23 +77,18 @@ function getAddressInput(mode) {
 			
 			let latlon = coordinates[Math.round(coordinates.length / 2)]
 			console.log(latlon)
-			popup = L.popup([latlon[0], latlon[1]], {content: '<center>' + 'Dystans: ' + Math.round(response.distance/1000) + ' km</center>'}).openOn(map);
+			popup = L.popup([latlon[0], latlon[1]], {content: '<center>' + 'Dystans: ' + round_distance(response.distance) + '</center>'}).openOn(map);
 			polyline.addTo(map);
 			start = 0;	
 		},
 		error: function(xhr,status,error) {
 			alert(`Wystąpił błąd - wpisano niepoprawny adres\nError ${xhr.status}`);
-		}	
-			
+		}		
 	})
 }
 
 function algorithmFunction() {
-	// Get the checkbox
 	var checkBox = document.getElementById("Algorythm");
-	// Get the output text
-
-	// If the checkbox is checked, display the output text
 	if (checkBox.checked == true)
 	{
 		console.log("A*");
@@ -107,11 +102,7 @@ function algorithmFunction() {
 }
 
 function costFunction() {
-	// Get the checkbox
 	var checkBox = document.getElementById("cost");
-	// Get the output text
-
-	// If the checkbox is checked, display the output text
 	if (checkBox.checked == true)
 	{
 		console.log("distance");

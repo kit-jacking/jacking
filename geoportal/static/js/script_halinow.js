@@ -145,7 +145,7 @@ function getAddressInput(mode) {
 			
 			let latlon = coordinates[Math.round(coordinates.length / 2)]
 			console.log(latlon)
-			popup = L.popup([latlon[0], latlon[1]], {content: '<center>' + 'Dystans: ' + Math.round(response.distance) + ' m</center>'}).openOn(map);
+			popup = L.popup([latlon[0], latlon[1]], {content: '<center>' + 'Dystans: ' + round_distance(response.distance) + ' m</center>'}).openOn(map);
 			polyline.addTo(map);
 
 			start = 0;
