@@ -1,5 +1,78 @@
 {% extends "base.html" %}
 {% block title %}Home Page{% endblock %}
 {% block content %}
-<h1>Strona do nawigacji</h1>
+<!DOCTYPE html>
+<html lang="pl">
+<style>
+article 
+	{
+		float: center;
+		padding: 20px;
+		width: 100%;
+		background-color: #f2f2f2;
+	}
+	
+p {
+  padding-left: 100px;
+  padding-right: 120px;
+}
+h2 {
+  padding-left: 100px;
+  padding-right: 120px;
+}
+ul {
+  padding-left: 150px;
+  padding-right: 120px;
+}
+
+footer {
+  background-color: #bfbfbf;
+  padding: 10px;
+  text-align: center;
+  color: black;
+}
+</style>
+<head>
+	<meta charset="utf-8">
+	
+</head>
+<body>
+	<article>
+		<center>
+			<h1>Witaj na naszej stronie do nawigacji!</h1>
+		</center>
+		
+		<br>
+		
+		<p>
+			Możesz tu sprawdzić jak wygląda najlepsze połączenie drogowe pomiędzy dwoma miejscami na mapie przy użyciu algorytmów A* i Dijkstra.
+			Ponad to możesz wybrać czy interesuje cię najszybsze czy najkrótsze połączenie.
+		</p>
+		<center>
+		<h2>Dostępne mapy</h2>
+
+		<ul>
+			  <li>Miasto Halinów</li>
+			  <li>Województwo warmińsko-mazurskie</li>
+			  <li>Rzeczpospolita Polska</li>
+		</ul>  
+			
+		
+		<h2>Sposób użycia</h2>
+		
+			<img src="{{url_for('static', filename='images/nawigacja.gif')}}" alt="Tutorial" style="width:600px;height:450px;">
+		</center>
+		
+		<br>	
+	</article>
+	
+	<footer>
+		<center>
+		<p>Strona została wykonana w ramach projektu studenckiego na zajęcia Programowanie Aplikacji Geoinformacyjnych </p>
+		<a href="https://github.com/kit-jacking/jacking">GitHub</a>
+		<p>Autorzy: Tymon Kwiatkowski, Jakub Maciążek, Igor Witczak</p>
+		</center>
+	</footer>
+</body>
+
 {% endblock %}
