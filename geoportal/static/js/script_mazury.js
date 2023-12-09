@@ -29,7 +29,7 @@ L.control.zoom({
 	zoomInTitle: 'Przybliż',
 	zoomOutTitle: 'Oddal'
 }).addTo(map);
-
+var popup = L.popup([0,0], {content: '<p>Hello world!<br />This is a nice popup.</p>'});
 var algorithm = "dijkstra";
 var cost = "time";
 var addressFrom = '';
@@ -58,7 +58,7 @@ function getAddressInput(mode) {
 				map.removeLayer(polyline)
 			}
 
-			var path = JSON.parse(response);
+			var path = JSON.parse(response.path);
 			var coordinates = [];
 
 			for (let i = 0; i < path.features.length; i++) {
@@ -71,9 +71,15 @@ function getAddressInput(mode) {
 				weight: 5
 			});
 
+			console.log(path.features.length)
+			console.log(coordinates.length)
+			console.log(coordinates.length / 2)
+			
+			let latlon = coordinates[Math.round(coordinates.length / 2)]
+			console.log(latlon)
+			popup = L.popup([latlon[0], latlon[1]], {content: '<center>' + 'Dystans: ' + round_distance(response.distance) + '</center>'}).openOn(map);
 			polyline.addTo(map);
-
-			start = 0;
+			start = 0;	
 		},
 		error: function(xhr,status,error) {
 			alert(`Wystąpił błąd - wpisano niepoprawny adres\nError ${xhr.status}`);
@@ -82,11 +88,7 @@ function getAddressInput(mode) {
 }
 
 function algorithmFunction() {
-	// Get the checkbox
 	var checkBox = document.getElementById("Algorythm");
-	// Get the output text
-
-	// If the checkbox is checked, display the output text
 	if (checkBox.checked == true)
 	{
 		console.log("A*");
@@ -100,11 +102,7 @@ function algorithmFunction() {
 }
 
 function costFunction() {
-	// Get the checkbox
 	var checkBox = document.getElementById("cost");
-	// Get the output text
-
-	// If the checkbox is checked, display the output text
 	if (checkBox.checked == true)
 	{
 		console.log("distance");
