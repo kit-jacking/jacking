@@ -21,7 +21,7 @@ h2 {
   padding-right: 120px;
 }
 ul {
-  padding-left: 150px;
+  padding-left: 200px;
   padding-right: 120px;
 }
 
@@ -48,20 +48,48 @@ footer {
 			Możesz tu sprawdzić jak wygląda najlepsze połączenie drogowe pomiędzy dwoma miejscami na mapie przy użyciu algorytmów A* i Dijkstra.
 			Ponad to możesz wybrać czy interesuje cię najszybsze czy najkrótsze połączenie.
 		</p>
-		<center>
+		
 		<h2>Dostępne mapy</h2>
 
 		<ul>
 			  <li>Miasto Halinów</li>
 			  <li>Województwo warmińsko-mazurskie</li>
 			  <li>Rzeczpospolita Polska</li>
-		</ul>  
-			
+		</ul>  		
 		
-		<h2>Sposób użycia</h2>
+		<h2>Sposób użycia</h2>	
 		
+		<p>
+			Korzystanie z aplikacji jest banalnie proste. Aby wyznaczyć trasę należy podać jako "Punkt początkowy" miejsce, z którego rozpoczynamy podróż i jako "Punkt końcowy" miejsce docelowe. 
+			Dodatkowo musimy podać "Klucz API" uprawniający nas do korzystania z portalu.
+			Następnie po kliknięciu przycisku "Wyznacz trasę" na mapie pojawi się przebieg wyznaczonej drogi.
+		</p>
+		
+		<center>
 			<img src="{{url_for('static', filename='images/nawigacja.gif')}}" alt="Tutorial" style="width:600px;height:450px;">
 		</center>
+		
+		<h2>Użyte technologie</h2>
+		
+		<p>
+			Do stworzenia aplikacji wykorzystano następujące języki programowania: Python, JavaScript, HTML i CSS. <br>
+			Trasy są wyznaczane algorytmami A* i Dijkstra. Warto zwrócić uwagę na to, że A* jest znacznie efektywniejsza od Dijkstry. Oba te algorytmy zostały zaimplementowane przez nas w języku Python. <br>
+		</p>	
+		
+		<center>
+			<img src="{{url_for('static', filename='images/astarvsdijkstra.gif')}}" alt="Tutorial" style="width:600px;height:280px;"></img>
+		</center>
+		
+		<center>
+			<a>	Porównanie działania algorytmu Dijkstry i A*</a>
+		</center>
+		
+		<br>
+		
+		<p>	
+		
+			Natomiast aplikacja webowa została napisana w językach JavaScript, HTML i CSS. Dużą rolę odegrały tu biblioteki: Leaflet.js (umożliwiający wizualizację tras na mapach) oraz Flask (integrujący działanie programów napisanych w języku Python z portalem opierającym się na JS/HTML/CSS).
+		</p>
 		
 		<br>	
 	</article>

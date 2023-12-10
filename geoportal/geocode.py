@@ -26,12 +26,18 @@ graph_halinow, gdf_halinow, node_start_halinow, node_end_halinow = create_exampl
 idx_halinow = index.Index()
 for i, node in enumerate(graph_halinow.nodes):
     idx_halinow.insert(i, (node.x, node.y, node.x, node.y), Node)
-print('Indexing Mazury...')    
-graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury.geojson')
+    
+'''print('Indexing Mazury...')    
+graph_mazury, gdf_mazury, node_start_mazury, node_end_mazury = create_example_graph_from_file(r'geometries\mazury_cale.geojson')
 idx_mazury = index.Index()
 for i, node in enumerate(graph_mazury.nodes):
     idx_mazury.insert(i, (node.x, node.y, node.x, node.y), Node)
-print('Finished')
+print('Indexing Polska...')    
+graph_poland, gdf_poland, node_start_poland, node_end_poland = create_example_graph_from_file(r'geometries\polska.geojson')
+idx_poland = index.Index()
+for i, node in enumerate(graph_poland.nodes):
+    idx_poland.insert(i, (node.x, node.y, node.x, node.y), Node)
+print('Finished')'''
 
 
 # Default action when webpage is opened - return html file
@@ -63,6 +69,7 @@ def  getNodesFromAddress():
     algorithm = request.form.get('algorithm')
     cost = request.form.get('cost')
     print(algorithm)
+    epsg = 'EPSG:2178'
     
     if int(region) == 0:
         nav_graph = graph_halinow
@@ -73,16 +80,23 @@ def  getNodesFromAddress():
         nav_graph = graph_mazury
         gdf = gdf_mazury
         idx = idx_mazury
+        
+    elif int(region) == 2:
+        nav_graph = graph_poland
+        gdf = gdf_poland
+        idx = idx_poland  
+        epsg = 'EPSG:2180'
+    
 
     # Parse Address From from input box to URL format
     address_from = parse.quote(request.form.get('addressFrom'))
     url_from = f"https://api.geoapify.com/v1/geocode/search?text={address_from}&country=Poland&apiKey={api_key}"
-    print(url_from)
+    #print(url_from)
     
     # Parse Address From from input box to URL format
     address_to = parse.quote(request.form.get('addressTo'))
     url_to = f"https://api.geoapify.com/v1/geocode/search?text={address_to}&country=Poland&apiKey={api_key}"
-    print(url_to)
+    #print(url_to)
     
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
@@ -108,9 +122,9 @@ def  getNodesFromAddress():
         #print(lat_to, lon_to)
     else:
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}    
-    print(address_from)
-    print(address_to)
-    print(api_key)
+    #print(address_from)
+    #print(address_to)
+    #print(api_key)
     # Nearest node search
     # for i, node in enumerate(nav_graph.nodes):
     #   idx.insert(i, (node.x, node.y, node.x, node.y), Node)
@@ -118,11 +132,11 @@ def  getNodesFromAddress():
     hit1 = list(idx.nearest((lon_from, lat_from, lon_from, lat_from), 1))[0]
     start_node = nav_graph.nodes[hit1]
     print("---------------------")
-    print(hit1)
+    print("hit1: ", hit1)
     
     hit2 = list(idx.nearest((lon_to, lat_to, lon_to, lat_to), 1))[0]
     finish_node = nav_graph.nodes[hit2]
-    print(hit2)
+    print("hit2", hit2)
     
     def distance(node: Node) -> float:
         return distance_between_nodes(node, finish_node)
@@ -138,14 +152,13 @@ def  getNodesFromAddress():
         use_time_as_cost = True
         print("time:", use_time_as_cost)
        
-    print(algorithm == "A*")
     if algorithm == "dijkstra":   
         print("Finding path with dijsktra algorithm...")    
         start_time = time.time()
         output = dijkstra(start_node, finish_node, use_time_as_cost)
         elapsed_time = time.time() - start_time
         path_gdf = output.get_path_gdf(gdf)
-        dist = output.get_path_length(gdf, length_crs='EPSG:2178')
+        dist = output.get_path_length(gdf, length_crs=epsg)
         print("dist:", dist)
     elif algorithm == "A*":
         print("Finding path with A* algorithm...")  
@@ -153,7 +166,7 @@ def  getNodesFromAddress():
         output = a_star(start_node, finish_node, distance, use_time_as_cost)   
         elapsed_time = time.time() - start_time
         path_gdf = output.get_path_gdf(gdf)
-        dist = output.get_path_length(gdf, length_crs='EPSG:2178')
+        dist = output.get_path_length(gdf, length_crs=epsg)
         print("dist:", dist)
     else:
         return json.dumps({'success':False}), 500, {'ContentType':'application/json'}    
@@ -164,6 +177,12 @@ def  getNodesFromAddress():
     #path_gdf.to_file("output.json", driver="GeoJSON")
     #print('end')
     nav_graph.clear()
+    '''
+    print("-----------------------------")
+    print(path_gdf)
+    print("-----------------------------")
+    print(path_gdf.to_json())
+    print("-----------------------------")'''
     
     return jsonify({"path": path_gdf.to_json(), "distance": dist})
 
